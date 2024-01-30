@@ -5,6 +5,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/es_01/pom.xml" />
+        <option value="$PROJECT_DIR$/es_02/pom.xml" />
+        <option value="$PROJECT_DIR$/es_03_spring_swagger_database/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
