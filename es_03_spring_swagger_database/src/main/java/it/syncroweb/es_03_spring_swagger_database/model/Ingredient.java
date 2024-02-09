@@ -1,5 +1,6 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,14 +17,13 @@ public class Ingredient {
     private String name;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Booze> boozes;
+    private List<IngredientCocktail> ingredientCocktails;
 
-    public Ingredient(Integer id, String name, List<Booze> boozes) {
+    public Ingredient(Integer id, String name, List<IngredientCocktail> ingredientCocktails) {
         this.id = id;
         this.name = name;
-        this.boozes = boozes;
+        this.ingredientCocktails = ingredientCocktails;
     }
-
     public Ingredient(){
 
     }
@@ -44,11 +44,12 @@ public class Ingredient {
         this.name = name;
     }
 
-    public List<Booze> getBoozes() {
-        return boozes;
+    @JsonManagedReference(value = "ingredient-ingredientCocktail")
+    public List<IngredientCocktail> getIngredientCocktails() {
+        return ingredientCocktails;
     }
 
-    public void setBoozes(List<Booze> boozes) {
-        this.boozes = boozes;
+    public void setIngredientCocktails(List<IngredientCocktail> ingredientCocktails) {
+        this.ingredientCocktails = ingredientCocktails;
     }
 }

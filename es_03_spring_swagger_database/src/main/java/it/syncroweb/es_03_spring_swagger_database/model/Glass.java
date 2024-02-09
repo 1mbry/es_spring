@@ -1,5 +1,6 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public class Glass {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 500)
@@ -44,6 +45,7 @@ public class Glass {
         this.name = name;
     }
 
+    @JsonManagedReference(value = "glass-drink")
     public List<Drink> getDrinks() {
         return drinks;
     }

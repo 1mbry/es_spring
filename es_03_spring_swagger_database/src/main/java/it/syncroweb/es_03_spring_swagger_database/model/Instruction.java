@@ -1,5 +1,6 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -49,6 +50,7 @@ public class Instruction {
         this.text = text;
     }
 
+    @JsonBackReference(value = "drink-instruction")
     public Drink getDrink() {
         return drink;
     }
@@ -57,6 +59,7 @@ public class Instruction {
         this.drink = drink;
     }
 
+    @JsonBackReference(value = "language-instruction")
     public Language getLanguage() {
         return language;
     }

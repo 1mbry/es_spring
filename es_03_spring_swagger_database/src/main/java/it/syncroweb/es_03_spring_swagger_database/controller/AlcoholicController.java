@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/alcoholic")
 public class AlcoholicController {
@@ -15,13 +16,9 @@ public class AlcoholicController {
     @Autowired
     public AlcoholicService alcoholicService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Alcoholic>> getAllAlcoholic(){
-        return alcoholicService.getAllAlcoholic();
-    }
-    @PostMapping("")
-    public ResponseEntity<Alcoholic> createAlcoholic(@RequestBody Alcoholic alcoholic){
-        return alcoholicService.addAlcoholic(alcoholic);
+    @PostMapping("/all")
+    public ResponseEntity<List<Alcoholic>> createAllAlcoholic(@RequestBody List<Alcoholic> alcoholics){
+        return alcoholicService.addAllAlcoholic(alcoholics);
     }
 
 }

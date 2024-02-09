@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface CocktailRepository extends JpaRepository<Cocktail,Integer> {
 
-    //@Query("SELECT DISTINCT ")
-//    List<String> findDistinctGlasses();
 }

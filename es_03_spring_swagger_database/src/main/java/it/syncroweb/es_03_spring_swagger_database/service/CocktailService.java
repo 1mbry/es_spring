@@ -19,12 +19,21 @@ public class CocktailService {
     //Get All Cocktails
     public ResponseEntity<List<Cocktail>> getAllCocktails(){
         try{
-            List<Cocktail> cocktails = new ArrayList<Cocktail>();
-            cocktails = cocktailRepository.findAll();
+            List<Cocktail> cocktails = cocktailRepository.findAll();
             return new ResponseEntity<>(cocktails, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         }
 
     }
+
+    public ResponseEntity<List<Cocktail>> addAllCocktails(List<Cocktail> cocktails) {
+        try {
+            List<Cocktail> alcoholics = cocktailRepository.saveAll(cocktails);
+            return new ResponseEntity<>(alcoholics, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

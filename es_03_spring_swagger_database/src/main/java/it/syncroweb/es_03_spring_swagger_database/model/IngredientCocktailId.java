@@ -1,29 +1,31 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
-import it.syncroweb.es_03_spring_swagger_database.model.Drink;
-import it.syncroweb.es_03_spring_swagger_database.model.Ingredient;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 @Embeddable
-public class BoozeId implements Serializable {
+public class IngredientCocktailId implements Serializable {
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_drink")
     private Drink drink;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_ingredient")
     private Ingredient ingredient;
 
-    public BoozeId(Drink drink, Ingredient ingredient) {
+    public IngredientCocktailId(Drink drink, Ingredient ingredient) {
         this.drink = drink;
         this.ingredient = ingredient;
     }
-    public BoozeId(){
+    public IngredientCocktailId(){
 
     }
 
+    @JsonBackReference(value = "drink-ingredientCocktail")
     public Drink getDrink() {
         return drink;
     }
@@ -32,6 +34,7 @@ public class BoozeId implements Serializable {
         this.drink = drink;
     }
 
+    @JsonBackReference(value = "ingredient-ingredientCocktail")
     public Ingredient getIngredient() {
         return ingredient;
     }

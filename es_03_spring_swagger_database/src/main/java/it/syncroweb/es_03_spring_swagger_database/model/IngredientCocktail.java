@@ -1,38 +1,42 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "booze")
-public class Booze {
+@Table(name = "ingredient_cocktail")
+public class IngredientCocktail {
 
     @EmbeddedId
-    private BoozeId id;
+    private IngredientCocktailId id;
 
     private String measure;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_id_drink", insertable = false, updatable = false)
     private Drink drink;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_id_ingredient", insertable = false, updatable = false)
     private Ingredient ingredient;
 
-    public Booze(BoozeId id, String measure, Drink drink, Ingredient ingredient) {
+    public IngredientCocktail(IngredientCocktailId id, String measure, Drink drink, Ingredient ingredient) {
         this.id = id;
         this.measure = measure;
         this.drink = drink;
         this.ingredient = ingredient;
     }
 
-    public Booze(){
+    public IngredientCocktail(){
 
     }
 
-    public BoozeId getId() {
+
+    public IngredientCocktailId getId() {
         return id;
     }
 
-    public void setId(BoozeId id) {
+    public void setId(IngredientCocktailId id) {
         this.id = id;
     }
 
@@ -44,6 +48,7 @@ public class Booze {
         this.measure = measure;
     }
 
+    @JsonBackReference(value = "drink-ingredientCocktail")
     public Drink getDrink() {
         return drink;
     }
@@ -52,6 +57,7 @@ public class Booze {
         this.drink = drink;
     }
 
+    @JsonBackReference(value = "ingredient-ingredientCocktail")
     public Ingredient getIngredient() {
         return ingredient;
     }

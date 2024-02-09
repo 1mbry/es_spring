@@ -20,4 +20,11 @@ public class CocktailController {
     public ResponseEntity<List<Cocktail>> getAllCocktails(){
         return cocktailService.getAllCocktails();
     }
+
+    @PostMapping("/all")
+    public ResponseEntity<List<Cocktail>> createAllCocktails(@RequestBody List<Cocktail> cocktails){
+        return cocktailService.addAllCocktails(cocktails);
+    }
+
+
 }

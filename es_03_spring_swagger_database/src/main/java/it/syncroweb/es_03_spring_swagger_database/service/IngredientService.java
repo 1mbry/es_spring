@@ -1,6 +1,5 @@
 package it.syncroweb.es_03_spring_swagger_database.service;
 
-import it.syncroweb.es_03_spring_swagger_database.model.Alcoholic;
 import it.syncroweb.es_03_spring_swagger_database.model.Ingredient;
 import it.syncroweb.es_03_spring_swagger_database.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,14 @@ public class IngredientService {
 
     @Autowired
     public IngredientRepository ingredientRepository;
+
+    public Ingredient getAll(String value){
+        try {
+            return ingredientRepository.findIngredient(value);
+        } catch (Exception e){
+            return null;
+        }
+    }
 
     //Get all ingredient
     public ResponseEntity<List<Ingredient>> getAllIngredient(){
@@ -34,6 +41,15 @@ public class IngredientService {
             Ingredient ingredient1 = ingredientRepository.save(ingredient);
             return new ResponseEntity<>(ingredient1, HttpStatus.CREATED);
         }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public ResponseEntity<List<Ingredient>> addAllIngredients(List<Ingredient> ingredients) {
+        try {
+            List<Ingredient> savedIngredients = ingredientRepository.saveAll(ingredients);
+            return new ResponseEntity<>(savedIngredients, HttpStatus.CREATED);
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

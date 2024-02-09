@@ -1,6 +1,10 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,9 +15,11 @@ import java.util.List;
 public class Drink {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @UpdateTimestamp
+    @Column(name = "date_modified")
     private LocalDateTime date_modified;
 
     @Column(length = 500)
@@ -22,6 +28,9 @@ public class Drink {
     private String alternate_name;
     @Column(length = 1000)
     private String url_thumb;
+
+    @Column(length = 1000)
+    private String image_attribution;
     @Column(length = 1000)
     private String image_source;
     @Column(length = 1000)
@@ -33,36 +42,41 @@ public class Drink {
     @Column(length = 500)
     private String creative_commons;
 
+
     @OneToMany(mappedBy = "drink", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Booze> boozes;
+    private List<IngredientCocktail> ingredientCocktails;
 
     @OneToMany(mappedBy = "drink", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Instruction> instructions;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_alcoholic")
+    @NotNull
     private Alcoholic alcoholic;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_category")
+    @NotNull
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_id_glass")
+    @NotNull
     private Glass glass;
 
-    public Drink(Integer id, LocalDateTime date_modified, String name, String alternate_name, String url_thumb, String image_source, String video, String tags, String iba, String creative_commons, List<Booze> boozes, List<Instruction> instructions, Alcoholic alcoholic, Category category, Glass glass) {
+    public Drink(Integer id, LocalDateTime date_modified, String name, String alternate_name, String url_thumb, String image_attribution, String image_source, String video, String tags, String iba, String creative_commons, List<IngredientCocktail> ingredientCocktails, List<Instruction> instructions, Alcoholic alcoholic, Category category, Glass glass) {
         this.id = id;
         this.date_modified = date_modified;
         this.name = name;
         this.alternate_name = alternate_name;
         this.url_thumb = url_thumb;
+        this.image_attribution = image_attribution;
         this.image_source = image_source;
         this.video = video;
         this.tags = tags;
         this.iba = iba;
         this.creative_commons = creative_commons;
-        this.boozes = boozes;
+        this.ingredientCocktails = ingredientCocktails;
         this.instructions = instructions;
         this.alcoholic = alcoholic;
         this.category = category;
@@ -113,6 +127,14 @@ public class Drink {
         this.url_thumb = url_thumb;
     }
 
+    public String getImage_attribution() {
+        return image_attribution;
+    }
+
+    public void setImage_attribution(String image_attribution) {
+        this.image_attribution = image_attribution;
+    }
+
     public String getImage_source() {
         return image_source;
     }
@@ -153,14 +175,16 @@ public class Drink {
         this.creative_commons = creative_commons;
     }
 
-    public List<Booze> getBoozes() {
-        return boozes;
+    @JsonManagedReference(value = "drink-ingredientCocktail")
+    public List<IngredientCocktail> getIngredientCocktails() {
+        return ingredientCocktails;
     }
 
-    public void setBoozes(List<Booze> boozes) {
-        this.boozes = boozes;
+    public void setIngredientCocktails(List<IngredientCocktail> ingredientCocktails) {
+        this.ingredientCocktails = ingredientCocktails;
     }
 
+    @JsonManagedReference(value = "drink-instruction")
     public List<Instruction> getInstructions() {
         return instructions;
     }
@@ -169,6 +193,7 @@ public class Drink {
         this.instructions = instructions;
     }
 
+    @JsonBackReference(value = "alcoholic-drink")
     public Alcoholic getAlcoholic() {
         return alcoholic;
     }
@@ -177,6 +202,7 @@ public class Drink {
         this.alcoholic = alcoholic;
     }
 
+    @JsonBackReference(value = "category-drink")
     public Category getCategory() {
         return category;
     }
@@ -185,6 +211,7 @@ public class Drink {
         this.category = category;
     }
 
+    @JsonBackReference(value = "glass-drink")
     public Glass getGlass() {
         return glass;
     }

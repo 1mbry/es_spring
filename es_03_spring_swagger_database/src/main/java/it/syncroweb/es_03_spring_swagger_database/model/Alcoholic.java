@@ -1,5 +1,6 @@
 package it.syncroweb.es_03_spring_swagger_database.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -10,16 +11,16 @@ import java.util.List;
 public class Alcoholic {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 500)
-    private String type;
+    @Column
+    private boolean type;
 
     @OneToMany(mappedBy = "alcoholic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Drink> drinks;
 
-    public Alcoholic(Integer id, String type, List<Drink> drinks) {
+    public Alcoholic(Integer id, boolean type, List<Drink> drinks) {
         this.id = id;
         this.type = type;
         this.drinks = drinks;
@@ -37,14 +38,15 @@ public class Alcoholic {
         this.id = id;
     }
 
-    public String getType() {
+    public boolean getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(boolean type) {
         this.type = type;
     }
 
+    @JsonManagedReference(value = "alcoholic-drink")
     public List<Drink> getDrinks() {
         return drinks;
     }
