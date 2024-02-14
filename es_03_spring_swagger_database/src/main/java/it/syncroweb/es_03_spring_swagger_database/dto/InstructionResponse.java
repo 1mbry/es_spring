@@ -1,18 +1,16 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
-import jakarta.validation.constraints.NotNull;
+public class InstructionResponse {
 
-public class InstructionRequestDTO {
-
-    private @NotNull String language;
+    private String language;
     private String text;
 
-    public InstructionRequestDTO(String language, String text) {
+    public InstructionResponse(String language, String text) {
         this.language = language;
         this.text = text;
     }
 
-    public InstructionRequestDTO(){
+    public InstructionResponse(){
 
     }
 

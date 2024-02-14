@@ -1,7 +1,9 @@
 package it.syncroweb.es_03_spring_swagger_database.service;
 
-import it.syncroweb.es_03_spring_swagger_database.dto.DrinkResponseDTO;
-import it.syncroweb.es_03_spring_swagger_database.dto.DrinkRequestDTO;
+import it.syncroweb.es_03_spring_swagger_database.dto.DrinkRequest;
+import it.syncroweb.es_03_spring_swagger_database.dto.DrinkResponse;
+import it.syncroweb.es_03_spring_swagger_database.dto.IngredientCocktailRequest;
+import it.syncroweb.es_03_spring_swagger_database.dto.InstructionRequest;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
 import it.syncroweb.es_03_spring_swagger_database.repository.*;
@@ -9,12 +11,10 @@ import it.syncroweb.es_03_spring_swagger_database.utils.ConvertUtils;
 import it.syncroweb.es_03_spring_swagger_database.utils.FormatLogger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DrinkService {
@@ -36,75 +36,86 @@ public class DrinkService {
     public CategoryRepository categoryRepository;
 
     @Autowired
-    public GlassRepository glassRepository;
+    public IngredientRepository ingredientRepository;
 
     @Autowired
-    public ConvertUtils utils;
+    public LanguageRepository languageRepository;
+
+    @Autowired
+    public GlassRepository glassRepository;
 
 
     //Get all drink
-    public ResponseEntity<List<DrinkResponseDTO>> getAllDrink(){
-        try {
-            List<Drink> drinks = drinkRepository.findAll();
-            List<DrinkResponseDTO> drinkResponseDTOS = ConvertUtils.convertDrinksToDTOs(drinks);
-            return new ResponseEntity<>(drinkResponseDTOS, HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    public List<DrinkResponse> getAllDrink() throws UnprocessableEntityException{
+        List<Drink> drinks = drinkRepository.findAll();
+        if(drinks.isEmpty()){
+            throw new UnprocessableEntityException("Drink repository is empty");
         }
+        return ConvertUtils.mapDrinksResponse(drinks);
     }
 
-
     //Post create one drink
-    public DrinkResponseDTO addDrink(DrinkRequestDTO drinkRequestDTO) throws UnprocessableEntityException {
+    public DrinkResponse addDrink(DrinkRequest drinkRequest) throws UnprocessableEntityException {
             //Ricavo Alcoholic dal database usando il valore booleano
-            Alcoholic alcoholic = alcoholicRepository.findByValue(drinkRequestDTO.isAlcoholic());
+            Alcoholic alcoholic = alcoholicRepository.findByType(drinkRequest.isAlcoholic());
             if(alcoholic == null){
                 throw new UnprocessableEntityException("Alcoholic not found");
             }
             //Ricavo Category dal database usando il valore string
-            Category category = categoryRepository.findByCategory(drinkRequestDTO.getCategory());
+            Category category = categoryRepository.findByName(drinkRequest.getCategory());
             if(category == null){
                 throw new UnprocessableEntityException("Category not found");
             }
 
             //Ricavo Glass dal database usando il valore string
-            Glass glass = glassRepository.findByGlass(drinkRequestDTO.getGlass());
+            Glass glass = glassRepository.findByName(drinkRequest.getGlass());
             if(glass == null){
                 throw new UnprocessableEntityException("Glass not found");
             }
 
+            HashMap<String,Language> languageHashMap = new HashMap<>();
+            //ciclo istruzioni
+            for (InstructionRequest instructionRequest : drinkRequest.getInstruction()) {
+                Language language = languageRepository.findByName(instructionRequest.getLanguage());
+                if (language == null) {
+                    throw new UnprocessableEntityException("Language not found");
+                }
+            languageHashMap.put(instructionRequest.getLanguage(),language);
+            }
 
-            Drink drink = ConvertUtils.convertDrinkRequestDTOToEntity(drinkRequestDTO,alcoholic,category,glass);
+            HashMap<String,Ingredient> ingredientHashMap = new HashMap<>();
+            //ciclo istruzioni
+            for (IngredientCocktailRequest ingredientCocktailRequest : drinkRequest.getIngredients()) {
+                Ingredient ingredient = ingredientRepository.findByName(ingredientCocktailRequest.getName());
+                if(ingredient == null){
+                    throw new UnprocessableEntityException("Ingredient not found");
+                }
+                ingredientHashMap.put(ingredientCocktailRequest.getName(),ingredient);
+            }
+
+            Drink drink = ConvertUtils.convertDrinkRequestDTOToEntity(drinkRequest,alcoholic,category,glass);
             drinkRepository.save(drink);
 
-            List<Instruction> instructions = utils.converter(drinkRequestDTO, drink);
+            List<Instruction> instructions = ConvertUtils.converter(drinkRequest, drink, languageHashMap);
             instructionRepository.saveAll(instructions);
             drink.setInstructions(instructions);
 
-            List<IngredientCocktail> ingredientCocktails = utils.converters(drinkRequestDTO,drink);
+            List<IngredientCocktail> ingredientCocktails = ConvertUtils.converters(drinkRequest, drink, ingredientHashMap);
             ingredientCocktailRepository.saveAll(ingredientCocktails);
             drink.setIngredientCocktails(ingredientCocktails);
 
             //logger.info("cocktail nome: %s", drink.getName());
-            DrinkResponseDTO drinkResponseDTO = ConvertUtils.convertDrinkToDTO(drink);
-            return drinkResponseDTO;
-    }
-
-    public ResponseEntity<DrinkResponseDTO> getDrink(){
-        Drink drink = drinkRepository.findLastDrink();
-        DrinkResponseDTO drinkResponseDTO = ConvertUtils.convertDrinkToDTO(drink);
-        return new ResponseEntity<>(drinkResponseDTO, HttpStatus.OK);
+            return ConvertUtils.mapDrinkResponse(drink);
     }
 
     //aggiungo i drink manualmente
-    public ResponseEntity<List<Drink>> addAllDrink(List<Drink> drinks) {
-        try {
+    public List<Drink> addAllDrink(List<Drink> drinks) throws UnprocessableEntityException{
             List<Drink> drinks1 = drinkRepository.saveAll(drinks);
-            return new ResponseEntity<>(drinks1, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            if (drinks1.isEmpty()){
+                throw new UnprocessableEntityException("I drink non sono stati salvati");
+            }
+            return drinks1;
     }
 
-
 }
+

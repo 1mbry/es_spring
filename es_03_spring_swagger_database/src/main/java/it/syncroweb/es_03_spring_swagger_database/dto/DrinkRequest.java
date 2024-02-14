@@ -1,10 +1,11 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public class DrinkRequestDTO {
+public class DrinkRequest {
 
     @NotNull
     private String name;
@@ -22,12 +23,12 @@ public class DrinkRequestDTO {
     private String tags;
     private String iba;
     private String creative_commons;
-    @NotNull
-    private  List<InstructionRequestDTO> instructionRequestDTOS;
-    @NotNull
-    private  List<IngredientCocktailRequestDTO> ingredientCocktailRequestDTOS;
+    @NotEmpty
+    private  List<InstructionRequest> instructionRequests;
+    @NotEmpty
+    private  List<IngredientCocktailRequest> ingredientCocktailRequests;
 
-    public DrinkRequestDTO(String name, String alternate_name, boolean alcoholic, String glass, String category, String url_thumb, String image_attribution, String image_source, String video, String tags, String iba, String creative_commons, List<InstructionRequestDTO> instructionRequestDTOS, List<IngredientCocktailRequestDTO> ingredientCocktailRequestDTOS) {
+    public DrinkRequest(String name, String alternate_name, boolean alcoholic, String glass, String category, String url_thumb, String image_attribution, String image_source, String video, String tags, String iba, String creative_commons, List<InstructionRequest> instructionRequests, List<IngredientCocktailRequest> ingredientCocktailRequests) {
         this.name = name;
         this.alternate_name = alternate_name;
         this.alcoholic = alcoholic;
@@ -40,11 +41,11 @@ public class DrinkRequestDTO {
         this.tags = tags;
         this.iba = iba;
         this.creative_commons = creative_commons;
-        this.instructionRequestDTOS = instructionRequestDTOS;
-        this.ingredientCocktailRequestDTOS = ingredientCocktailRequestDTOS;
+        this.instructionRequests = instructionRequests;
+        this.ingredientCocktailRequests = ingredientCocktailRequests;
     }
 
-    public DrinkRequestDTO(){
+    public DrinkRequest(){
 
     }
 
@@ -144,19 +145,19 @@ public class DrinkRequestDTO {
         this.creative_commons = creative_commons;
     }
 
-    public List<InstructionRequestDTO> getInstruction() {
-        return instructionRequestDTOS;
+    public List<InstructionRequest> getInstruction() {
+        return instructionRequests;
     }
 
-    public void setInstruction(List<InstructionRequestDTO> instructionRequestDTOS) {
-        this.instructionRequestDTOS = instructionRequestDTOS;
+    public void setInstruction(List<InstructionRequest> instructionRequests) {
+        this.instructionRequests = instructionRequests;
     }
 
-    public List<IngredientCocktailRequestDTO> getIngredients() {
-        return ingredientCocktailRequestDTOS;
+    public List<IngredientCocktailRequest> getIngredients() {
+        return ingredientCocktailRequests;
     }
 
-    public void setIngredients(List<IngredientCocktailRequestDTO> ingredientCocktailRequestDTOS) {
-        this.ingredientCocktailRequestDTOS = ingredientCocktailRequestDTOS;
+    public void setIngredients(List<IngredientCocktailRequest> ingredientCocktailRequests) {
+        this.ingredientCocktailRequests = ingredientCocktailRequests;
     }
 }

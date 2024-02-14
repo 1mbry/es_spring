@@ -16,6 +16,7 @@ public class Language {
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Instruction> instructions;
 
+    @Column
     private String name;
 
     public Language(Integer id, List<Instruction> instructions, String name) {

@@ -3,7 +3,7 @@ package it.syncroweb.es_03_spring_swagger_database.dto;
 
 import java.util.List;
 
-public class DrinkResponseDTO {
+public class DrinkResponse {
 
     private Integer id;
     private String name;
@@ -18,10 +18,10 @@ public class DrinkResponseDTO {
     private String tags;
     private String iba;
     private String creative_commons;
-    private List<IngredientCocktailDTO> ingredientCocktailDTOS;
-    private List<InstructionResponseDTO> instructionResponseDTOS;
+    private List<IngredientCocktailResponse> ingredientCocktailResponses;
+    private List<InstructionResponse> instructionResponses;
 
-    public DrinkResponseDTO(Integer id, String name, String alternate_name, boolean alcoholic, String glass, String category, String url_thumb, String image_attribution, String image_source, String video, String tags, String iba, String creative_commons, List<IngredientCocktailDTO> ingredientCocktailDTOS, List<InstructionResponseDTO> instructionResponseDTOS) {
+    public DrinkResponse(Integer id, String name, String alternate_name, boolean alcoholic, String glass, String category, String url_thumb, String image_attribution, String image_source, String video, String tags, String iba, String creative_commons, List<IngredientCocktailResponse> ingredientCocktailResponses, List<InstructionResponse> instructionResponses) {
         this.id = id;
         this.name = name;
         this.alternate_name = alternate_name;
@@ -35,11 +35,11 @@ public class DrinkResponseDTO {
         this.tags = tags;
         this.iba = iba;
         this.creative_commons = creative_commons;
-        this.ingredientCocktailDTOS = ingredientCocktailDTOS;
-        this.instructionResponseDTOS = instructionResponseDTOS;
+        this.ingredientCocktailResponses = ingredientCocktailResponses;
+        this.instructionResponses = instructionResponses;
     }
 
-    public DrinkResponseDTO(){
+    public DrinkResponse(){
 
     }
 
@@ -147,19 +147,19 @@ public class DrinkResponseDTO {
         this.creative_commons = creative_commons;
     }
 
-    public List<IngredientCocktailDTO> getIngredients() {
-        return ingredientCocktailDTOS;
+    public List<IngredientCocktailResponse> getIngredients() {
+        return ingredientCocktailResponses;
     }
 
-    public void setIngredients(List<IngredientCocktailDTO> ingredientCocktailDTOS) {
-        this.ingredientCocktailDTOS = ingredientCocktailDTOS;
+    public void setIngredients(List<IngredientCocktailResponse> ingredientCocktailResponses) {
+        this.ingredientCocktailResponses = ingredientCocktailResponses;
     }
 
-    public List<InstructionResponseDTO> getInstructions() {
-        return instructionResponseDTOS;
+    public List<InstructionResponse> getInstructions() {
+        return instructionResponses;
     }
 
-    public void setInstructions(List<InstructionResponseDTO> instructionResponseDTOS) {
-        this.instructionResponseDTOS = instructionResponseDTOS;
+    public void setInstructions(List<InstructionResponse> instructionResponses) {
+        this.instructionResponses = instructionResponses;
     }
 }

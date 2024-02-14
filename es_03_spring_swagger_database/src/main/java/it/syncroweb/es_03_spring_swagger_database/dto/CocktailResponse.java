@@ -1,14 +1,10 @@
-package it.syncroweb.es_03_spring_swagger_database.model;
+package it.syncroweb.es_03_spring_swagger_database.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
-public class Cocktail {
+public class CocktailResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private Integer idDrink;
+    private String idDrink;
     private String strDrink;
     private String strDrinkAlternate;
     private String strTags;
@@ -17,21 +13,15 @@ public class Cocktail {
     private String strIBA;
     private String strAlcoholic;
     private String strGlass;
-    @Column(length = 500)
     private String strInstructions;
-    @Column(length = 500)
     private String strInstructionsES;
-    @Column(length = 500)
     private String strInstructionsDE;
-    @Column(length = 500)
     private String strInstructionsFR;
-    @Column(length = 500)
     private String strInstructionsIT;
-    @Column(length = 500)
+    @JsonProperty("strInstructionsZH-HANS")
     private String strInstructionsZH_HANS;
-    @Column(length = 500)
+    @JsonProperty("strInstructionsZH-HANT")
     private String strInstructionsZH_HANT;
-    @Column(length = 1000)
     private String strDrinkThumb;
     private String strIngredient1;
     private String strIngredient2;
@@ -67,8 +57,8 @@ public class Cocktail {
     private String strImageAttribution;
     private String strCreativeCommonsConfirmed;
     private String dateModified;
-    public Cocktail(Integer id, Integer idDrink, String strDrink, String strDrinkAlternate, String strTags, String strVideo, String strCategory, String strIBA, String strAlcoholic, String strGlass, String strInstructions, String strInstructionsES, String strInstructionsDE, String strInstructionsFR, String strInstructionsIT, String strInstructionsZH_HANS, String strInstructionsZH_HANT, String strDrinkThumb, String strIngredient1, String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5, String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9, String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13, String strIngredient14, String strIngredient15, String strMeasure1, String strMeasure2, String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6, String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15, String strImageSource, String strImageAttribution, String strCreativeCommonsConfirmed, String dateModified) {
-        this.id = id;
+
+    public CocktailResponse(String idDrink, String strDrink, String strDrinkAlternate, String strTags, String strVideo, String strCategory, String strIBA, String strAlcoholic, String strGlass, String strInstructions, String strInstructionsES, String strInstructionsDE, String strInstructionsFR, String strInstructionsIT, String strInstructionsZH_HANS, String strInstructionsZH_HANT, String strDrinkThumb, String strIngredient1, String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5, String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9, String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13, String strIngredient14, String strIngredient15, String strMeasure1, String strMeasure2, String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6, String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15, String strImageSource, String strImageAttribution, String strCreativeCommonsConfirmed, String dateModified) {
         this.idDrink = idDrink;
         this.strDrink = strDrink;
         this.strDrinkAlternate = strDrinkAlternate;
@@ -122,23 +112,15 @@ public class Cocktail {
         this.dateModified = dateModified;
     }
 
-    public Cocktail(){
+    public CocktailResponse(){
 
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getIdDrink() {
+    public String getIdDrink() {
         return idDrink;
     }
 
-    public void setIdDrink(Integer idDrink) {
+    public void setIdDrink(String idDrink) {
         this.idDrink = idDrink;
     }
 
@@ -542,4 +524,3 @@ public class Cocktail {
         this.dateModified = dateModified;
     }
 }
-

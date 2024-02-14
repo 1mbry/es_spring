@@ -1,15 +1,15 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
-public class LanguageResponseDTO {
+public class LanguageResponse {
 
     private Integer id;
     private String language;
 
-    public LanguageResponseDTO(Integer id, String language) {
+    public LanguageResponse(Integer id, String language) {
         this.id = id;
         this.language = language;
     }
-    public LanguageResponseDTO(){
+    public LanguageResponse(){
 
     }
 

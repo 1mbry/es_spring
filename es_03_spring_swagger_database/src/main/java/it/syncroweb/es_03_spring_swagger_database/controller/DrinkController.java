@@ -1,9 +1,7 @@
 package it.syncroweb.es_03_spring_swagger_database.controller;
 
-import it.syncroweb.es_03_spring_swagger_database.dto.DrinkResponseDTO;
-import it.syncroweb.es_03_spring_swagger_database.dto.DrinkRequestDTO;
-import it.syncroweb.es_03_spring_swagger_database.dto.IngredientCocktailRequestDTO;
-import it.syncroweb.es_03_spring_swagger_database.dto.InstructionRequestDTO;
+import it.syncroweb.es_03_spring_swagger_database.dto.DrinkResponse;
+import it.syncroweb.es_03_spring_swagger_database.dto.DrinkRequest;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
 import it.syncroweb.es_03_spring_swagger_database.model.Drink;
 import it.syncroweb.es_03_spring_swagger_database.service.DrinkService;
@@ -25,18 +23,14 @@ public class DrinkController {
     @Autowired
     public DrinkService drinkService;
     @GetMapping("/getall")
-    public ResponseEntity<List<DrinkResponseDTO>> getAllDrink(){
-        return drinkService.getAllDrink();
+    public ResponseEntity<List<DrinkResponse>> getAllDrink() throws UnprocessableEntityException{
+        List<DrinkResponse> drinkResponse = drinkService.getAllDrink();
+        return new ResponseEntity<>(drinkResponse, HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity<DrinkResponseDTO> createDrink(@Valid @RequestBody DrinkRequestDTO drinkRequestDTO) throws UnprocessableEntityException {
-        DrinkResponseDTO drinkResponseDTO = drinkService.addDrink(drinkRequestDTO);
-        return new ResponseEntity<>(drinkResponseDTO, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/all")
-    public ResponseEntity<List<Drink>> createAllDrink(@RequestBody List<Drink> drinks){
-        return drinkService.addAllDrink(drinks);
+    public ResponseEntity<DrinkResponse> createDrink(@Valid @RequestBody DrinkRequest drinkRequest) throws UnprocessableEntityException {
+        DrinkResponse drinkResponse = drinkService.addDrink(drinkRequest);
+        return new ResponseEntity<>(drinkResponse, HttpStatus.CREATED);
     }
 }

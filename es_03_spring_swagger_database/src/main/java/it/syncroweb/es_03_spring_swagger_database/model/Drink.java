@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Entity
 @Table(name = "drink")
 public class Drink {
@@ -24,24 +23,30 @@ public class Drink {
 
     @Column(length = 500)
     private String name;
+
     @Column(length = 500)
     private String alternate_name;
+
     @Column(length = 1000)
     private String url_thumb;
 
     @Column(length = 1000)
     private String image_attribution;
+
     @Column(length = 1000)
     private String image_source;
+
     @Column(length = 1000)
     private String video;
+
     @Column(length = 1000)
     private String tags;
+
     @Column(length = 500)
     private String iba;
+
     @Column(length = 500)
     private String creative_commons;
-
 
     @OneToMany(mappedBy = "drink", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<IngredientCocktail> ingredientCocktails;

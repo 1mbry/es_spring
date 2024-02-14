@@ -1,15 +1,15 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
-public class CategoryResponseDTO {
+public class CategoryResponse {
 
     private Integer id;
     private String name;
 
-    public CategoryResponseDTO(Integer id, String name) {
+    public CategoryResponse(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
-    public CategoryResponseDTO(){
+    public CategoryResponse(){
 
     }
 

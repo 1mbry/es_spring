@@ -2,17 +2,18 @@ package it.syncroweb.es_03_spring_swagger_database.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public class IngredientCocktailRequestDTO {
+public class IngredientCocktailRequest {
 
-    private @NotNull String name;
+    @NotNull
+    private String name;
     private String measure;
 
-    public IngredientCocktailRequestDTO(String name, String measure) {
+    public IngredientCocktailRequest(String name, String measure) {
         this.name = name;
         this.measure = measure;
     }
 
-    public IngredientCocktailRequestDTO(){
+    public IngredientCocktailRequest(){
 
     }
 

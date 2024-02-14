@@ -1,16 +1,15 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
-public class IngredientCocktailDTO {
+public class IngredientCocktailResponse {
 
     private String name;
     private String measure;
 
-    public IngredientCocktailDTO() {
+    public IngredientCocktailResponse(String name, String measure) {
         this.name = name;
         this.measure = measure;
     }
-
-    public IngredientCocktailDTO(String name, String measure){
+    public IngredientCocktailResponse(){
 
     }
 

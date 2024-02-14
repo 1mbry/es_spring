@@ -1,15 +1,15 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
-public class GlassResponseDTO {
+public class GlassResponse {
     private Integer id;
     private String name;
 
-    public GlassResponseDTO(Integer id, String name) {
+    public GlassResponse(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public GlassResponseDTO(){
+    public GlassResponse(){
 
     }
 

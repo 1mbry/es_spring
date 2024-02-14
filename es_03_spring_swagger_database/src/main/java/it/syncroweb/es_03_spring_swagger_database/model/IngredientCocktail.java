@@ -10,6 +10,7 @@ public class IngredientCocktail {
     @EmbeddedId
     private IngredientCocktailId id;
 
+    @Column
     private String measure;
 
     @ManyToOne(fetch = FetchType.LAZY)

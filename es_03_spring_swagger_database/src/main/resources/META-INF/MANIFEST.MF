@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: it.syncroweb.es_03_spring_swagger_database.Es03SpringSwagger
+ DatabaseApplication
+
