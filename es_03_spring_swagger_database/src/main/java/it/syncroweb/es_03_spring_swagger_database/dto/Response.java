@@ -1,5 +1,10 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Response {
     private String message;
 
@@ -9,14 +14,6 @@ public class Response {
 
     public Response(String message) {
         super();
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
     }
 

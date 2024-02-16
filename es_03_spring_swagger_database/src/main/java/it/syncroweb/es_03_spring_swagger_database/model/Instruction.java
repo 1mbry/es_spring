@@ -2,7 +2,14 @@ package it.syncroweb.es_03_spring_swagger_database.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.*;
 
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "instruction")
 public class Instruction {
@@ -22,41 +29,9 @@ public class Instruction {
     @JoinColumn(name = "fk_id_language")
     private Language language;
 
-
-    public Instruction(Integer id, String text, Drink drink, Language language) {
-        this.id = id;
-        this.text = text;
-        this.drink = drink;
-        this.language = language;
-    }
-
-    public Instruction(){
-
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
     @JsonBackReference(value = "drink-instruction")
     public Drink getDrink() {
         return drink;
-    }
-
-    public void setDrink(Drink drink) {
-        this.drink = drink;
     }
 
     @JsonBackReference(value = "language-instruction")
@@ -64,7 +39,4 @@ public class Instruction {
         return language;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
 }

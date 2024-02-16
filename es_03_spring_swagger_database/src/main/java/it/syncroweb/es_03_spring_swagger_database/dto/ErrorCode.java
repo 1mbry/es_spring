@@ -1,5 +1,13 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public enum ErrorCode {
     UA("Unauthorized"),
     ISE, //INTERNAL SERVER ERROR,
@@ -10,13 +18,4 @@ public enum ErrorCode {
 
     private String message;
 
-    public String getMessage(){
-        return this.message;
-    }
-
-    private ErrorCode() {}
-
-    private ErrorCode(String message){
-        this.message = message;
-    }
 }

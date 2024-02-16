@@ -2,10 +2,17 @@ package it.syncroweb.es_03_spring_swagger_database.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "category")
 public class Category {
 
@@ -19,38 +26,9 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Drink> drinks;
 
-    public Category(Integer id, String name, List<Drink> drinks) {
-        this.id = id;
-        this.name = name;
-        this.drinks = drinks;
-    }
-
-    public Category(){
-
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @JsonManagedReference(value = "category-drink")
     public List<Drink> getDrinks() {
         return drinks;
     }
 
-    public void setDrinks(List<Drink> drinks) {
-        this.drinks = drinks;
-    }
 }

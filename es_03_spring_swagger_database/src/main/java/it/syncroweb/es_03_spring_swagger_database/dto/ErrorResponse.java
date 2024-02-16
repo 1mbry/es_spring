@@ -1,8 +1,13 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Setter
+@Getter
 public class ErrorResponse extends Response {
     private Map<String, String> errors;
 
@@ -21,11 +26,4 @@ public class ErrorResponse extends Response {
         this.errors = errors;
     }
 
-    public Map<String, String> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(Map<String, String> errors) {
-        this.errors = errors;
-    }
 }

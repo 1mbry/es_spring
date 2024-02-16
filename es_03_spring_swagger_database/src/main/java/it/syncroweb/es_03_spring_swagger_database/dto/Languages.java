@@ -1,5 +1,10 @@
 package it.syncroweb.es_03_spring_swagger_database.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum Languages {
 
     ES ("Spanish"),
@@ -9,14 +14,6 @@ public enum Languages {
     ZH_HANS("Chinese (Simplified)"),
     ZH_HANT("Chinese (Traditional)");
     private final String name;
-
-    Languages(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public static String getNameOrDefault(String languageCode) {
         try {
