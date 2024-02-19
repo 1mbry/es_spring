@@ -25,6 +25,12 @@ public class DrinkController {
 
     @Autowired
     private DrinkService drinkService;
+
+    /*@GetMapping("/one")
+    public ResponseEntity<DrinkResponse> getOne(Integer id){
+        return new ResponseEntity<>(drinkService.getDrinkById(id), HttpStatus.OK);
+    }*/
+
     @GetMapping("/getall")
     public ResponseEntity<List<DrinkResponse>> getAllDrink() throws UnprocessableEntityException{
         logger.info("Inizio richiesta Drink Controller getAllDrink");

@@ -3,8 +3,7 @@ package it.syncroweb.es_03_spring_swagger_database.utils;
 import it.syncroweb.es_03_spring_swagger_database.dto.*;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,27 +12,25 @@ import java.util.stream.Collectors;
 
 public class ConvertUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConvertUtils.class);
+    private static final FormatLogger logger = new FormatLogger(LogManager.getLogger(ConvertUtils.class));
 
     public static List<DrinkResponse> mapDrinksResponse(List<Drink> drinks) {
-        logger.info("Inizio di drinks.stream() con mapping di DrinkResponse");
+        logger.info("Inizio di del processo con mapping di DrinkResponse", drinks);
         return drinks.stream()
                 .map(ConvertUtils::mapDrinkResponse)
                 .collect(Collectors.toList());
     }
 
     public static DrinkResponse mapDrinkResponse(Drink drink){
-        logger.info("Inizio di drink.getIngredientCocktails().stream() con mapping di IngredientCocktailResponse");
+        logger.info("Inizio del processo con mapping di IngredientCocktailResponse", drink);
         List<IngredientCocktailResponse> ingredientCocktailResponses = drink.getIngredientCocktails().stream()
                 .map(ConvertUtils::mapIngredientCocktailResponse)
                 .collect(Collectors.toList());
-        logger.info("Ritorno di ingredientCocktailResponse dopo aver settato i valori");
 
-        logger.info("Inizio di drink.getInstructions().stream() con mapping di InstructionResponse");
+        logger.info("Inizio del processo con mapping di InstructionResponse", drink.getId());
         List<InstructionResponse> instructionResponses = drink.getInstructions().stream()
                 .map(ConvertUtils::mapInstructionResponse)
                 .collect(Collectors.toList());
-        logger.info("Ritorno di instructionResponse dopo aver settato i valori");
 
         Alcoholic alcoholic = drink.getAlcoholic();
         boolean alcoholicType = alcoholic.getType();
@@ -44,19 +41,42 @@ public class ConvertUtils {
         Category category = drink.getCategory();
         String categoryName = category.getName();
 
-        logger.info("Ritorno di drinkResponse dopo aver settato i valori");
-        return new DrinkResponse(drink.getId(), drink.getName(),drink.getAlternate_name(),alcoholicType,glassName,categoryName,drink.getUrl_thumb(),drink.getImage_attribution(),drink.getImage_source(),drink.getVideo(),drink.getTags(),drink.getIba(),drink.getCreative_commons(), ingredientCocktailResponses, instructionResponses);
+        DrinkResponse drinkResponse = new DrinkResponse();
+        drinkResponse.setId(drink.getId());
+        drinkResponse.setName(drink.getName());
+        drinkResponse.setAlternate_name(drink.getAlternate_name());
+        drinkResponse.setAlcoholic(alcoholicType);
+        drinkResponse.setGlass(glassName);
+        drinkResponse.setCategory(categoryName);
+        drinkResponse.setUrl_thumb(drink.getUrl_thumb());
+        drinkResponse.setImage_attribution(drink.getImage_attribution());
+        drinkResponse.setImage_source(drink.getImage_source());
+        drinkResponse.setVideo(drink.getVideo());
+        drinkResponse.setTags(drink.getTags());
+        drinkResponse.setIba(drink.getIba());
+        drinkResponse.setCreative_commons(drink.getCreative_commons());
+        drinkResponse.setIngredients(ingredientCocktailResponses);
+        drinkResponse.setInstructions(instructionResponses);
+        logger.info("Ritorno di drinkResponse dopo aver settato i valori", drinkResponse);
+        return drinkResponse;
     }
 
     public static IngredientCocktailResponse mapIngredientCocktailResponse(IngredientCocktail ingredientCocktail){
+        logger.info("Sta processando IngredientCocktail", ingredientCocktail);
         IngredientCocktailResponse ingredientCocktailResponse = new IngredientCocktailResponse();
         ingredientCocktailResponse.setName(ingredientCocktail.getIngredient().getName());
         ingredientCocktailResponse.setMeasure(ingredientCocktail.getMeasure());
+        logger.info("Sta ritornando IngredientCocktailResponse", ingredientCocktailResponse);
         return ingredientCocktailResponse;
     }
 
     public static InstructionResponse mapInstructionResponse(Instruction instruction){
-        return new InstructionResponse(instruction.getLanguage().getName(), instruction.getText());
+        logger.info("Sta processando Instruction", instruction);
+        InstructionResponse instructionResponse = new InstructionResponse();
+        instructionResponse.setLanguage(instruction.getLanguage().getName());
+        instructionResponse.setText(instruction.getText());
+        logger.info("Sta ritornando InstructionResponse", instructionResponse);
+        return instructionResponse;
     }
 
 
