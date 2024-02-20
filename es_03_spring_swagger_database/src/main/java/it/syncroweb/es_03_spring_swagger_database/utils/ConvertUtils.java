@@ -149,29 +149,29 @@ public class ConvertUtils {
         return ingredientCocktail;
     }
 
-    public static IngredientResponse mapIngredientResponse(Ingredient ingredient){
+    /*public static IngredientResponse mapIngredientResponse(Ingredient ingredient){
         IngredientResponse ingredientResponse = new IngredientResponse();
         ingredientResponse.setId(ingredient.getId());
         ingredientResponse.setName(ingredient.getName());
         return ingredientResponse;
-    }
-    public static CategoryResponse mapCategoryResponse(Category category ){
+    }*/
+    /*public static CategoryResponse mapCategoryResponse(Category category ){
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setId(category.getId());
         categoryResponse.setName(category.getName());
         return categoryResponse;
-    }
-    public static GlassResponse mapGlassResponse(Glass glass){
+    }*/
+    /*public static GlassResponse mapGlassResponse(Glass glass){
         GlassResponse glassResponse = new GlassResponse();
         glassResponse.setId(glass.getId());
         glassResponse.setName(glass.getName());
         return glassResponse;
-    }
+    }*/
 
-    public static LanguageResponse mapLanguageResponse(Language language){
+    /*public static LanguageResponse mapLanguageResponse(Language language){
         LanguageResponse languageResponse = new LanguageResponse();
         languageResponse.setId(language.getId());
         languageResponse.setLanguage(language.getName());
         return languageResponse;
-    }
+    }*/
 }

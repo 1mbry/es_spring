@@ -1,6 +1,7 @@
 package it.syncroweb.es_03_spring_swagger_database.service;
 
 import it.syncroweb.es_03_spring_swagger_database.dto.*;
+import it.syncroweb.es_03_spring_swagger_database.mapper.CombinedMapper;
 import it.syncroweb.es_03_spring_swagger_database.model.Category;
 import it.syncroweb.es_03_spring_swagger_database.model.Glass;
 import it.syncroweb.es_03_spring_swagger_database.model.Ingredient;
@@ -9,14 +10,12 @@ import it.syncroweb.es_03_spring_swagger_database.repository.CategoryRepository;
 import it.syncroweb.es_03_spring_swagger_database.repository.GlassRepository;
 import it.syncroweb.es_03_spring_swagger_database.repository.IngredientRepository;
 import it.syncroweb.es_03_spring_swagger_database.repository.LanguageRepository;
-import it.syncroweb.es_03_spring_swagger_database.utils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CombinedService {
@@ -43,36 +42,40 @@ public class CombinedService {
             List<Category> categories = categoryRepository.findAll();
             logger.info("Ritorno di tutte le entity di category");
             logger.info("Inizio di categories.stream() con mapping di CategoryResponse");
-            List<CategoryResponse> categoryResponses = categories.stream()
+            /*List<CategoryResponse> categoryResponses = categories.stream()
                     .map(ConvertUtils::mapCategoryResponse)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
+            List<CategoryResponse> categoryResponses = CombinedMapper.INSTANCE.toCategoryResponseList(categories);
             logger.info("Ritorno di categoryResponse dopo aver settato i valori");
 
             logger.info("Ricerca nel db di tutti i glass");
             List<Glass> glasses = glassRepository.findAll();
             logger.info("Ritorno di tutte le entity di glass");
             logger.info("Inizio di glasses.stream() con mapping di GlassResponse");
-            List<GlassResponse> glassResponses = glasses.stream()
+            /*List<GlassResponse> glassResponses = glasses.stream()
                     .map(ConvertUtils::mapGlassResponse)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
+            List<GlassResponse> glassResponses = CombinedMapper.INSTANCE.toGlassResponseList(glasses);
             logger.info("Ritorno di glassResponse dopo aver settato i valori");
 
             logger.info("Ricerca nel db di tutti gli ingredient");
             List<Ingredient> ingredients = ingredientRepository.findAll();
             logger.info("Ritorno di tutte le entity di ingredient");
             logger.info("Inizio di ingredients.stream() con mapping di IngredientResponse");
-            List<IngredientResponse> ingredientResponses = ingredients.stream()
+            /*List<IngredientResponse> ingredientResponses = ingredients.stream()
                     .map(ConvertUtils::mapIngredientResponse)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
+            List<IngredientResponse> ingredientResponses = CombinedMapper.INSTANCE.toIngredientResponseList(ingredients);
             logger.info("Ritorno di ingredientResponse dopo aver settato i valori");
 
             logger.info("Ricerca nel db di tutti le language");
             List<Language> languages = languageRepository.findAll();
             logger.info("Ritorno di tutte le entity di language");
             logger.info("Inizio di languages.stream() con mapping di LanguageResponse");
-            List<LanguageResponse> languageResponses = languages.stream()
+            /*List<LanguageResponse> languageResponses = languages.stream()
                     .map(ConvertUtils::mapLanguageResponse)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList());*/
+            List<LanguageResponse> languageResponses = CombinedMapper.INSTANCE.toLanguageResponseList(languages);
             logger.info("Ritorno di languageResponse dopo aver settato i valori");
 
             CombinedResponse combinedResponse = new CombinedResponse();
