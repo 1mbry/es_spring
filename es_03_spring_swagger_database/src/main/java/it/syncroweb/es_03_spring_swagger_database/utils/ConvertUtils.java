@@ -4,6 +4,8 @@ import it.syncroweb.es_03_spring_swagger_database.dto.*;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
 import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,21 +15,21 @@ import java.util.stream.Collectors;
 public class ConvertUtils {
 
     private static final FormatLogger logger = new FormatLogger(LogManager.getLogger(ConvertUtils.class));
-
+    private static final Logger log = LoggerFactory.getLogger(ConvertUtils.class);
     public static List<DrinkResponse> mapDrinksResponse(List<Drink> drinks) {
-        logger.info("Inizio di del processo con mapping di DrinkResponse", drinks);
+        log.info("Inizio di del processo con mapping di List<DrinkResponse> {}", drinks.size());
         return drinks.stream()
                 .map(ConvertUtils::mapDrinkResponse)
                 .collect(Collectors.toList());
     }
 
     public static DrinkResponse mapDrinkResponse(Drink drink){
-        logger.info("Inizio del processo con mapping di IngredientCocktailResponse", drink);
+        log.info("Inizio del processo con mapping di IngredientCocktailResponse con drink.id {}", drink.getId());
         List<IngredientCocktailResponse> ingredientCocktailResponses = drink.getIngredientCocktails().stream()
                 .map(ConvertUtils::mapIngredientCocktailResponse)
                 .collect(Collectors.toList());
 
-        logger.info("Inizio del processo con mapping di InstructionResponse", drink.getId());
+        log.info("Inizio del processo con mapping di InstructionResponse {}", drink.getId());
         List<InstructionResponse> instructionResponses = drink.getInstructions().stream()
                 .map(ConvertUtils::mapInstructionResponse)
                 .collect(Collectors.toList());
@@ -57,16 +59,16 @@ public class ConvertUtils {
         drinkResponse.setCreative_commons(drink.getCreative_commons());
         drinkResponse.setIngredients(ingredientCocktailResponses);
         drinkResponse.setInstructions(instructionResponses);
-        logger.info("Ritorno di drinkResponse dopo aver settato i valori", drinkResponse);
+        log.info("Ritorno di drinkResponse dopo aver settato i valori {}", drinkResponse);
         return drinkResponse;
     }
 
     public static IngredientCocktailResponse mapIngredientCocktailResponse(IngredientCocktail ingredientCocktail){
-        logger.info("Sta processando IngredientCocktail", ingredientCocktail);
+        log.info("Sta processando IngredientCocktail con 'fk_id_drink {}' e 'fk_id_ingredient {}' ", ingredientCocktail.getId().getDrink().getId(), ingredientCocktail.getId().getIngredient().getId());
         IngredientCocktailResponse ingredientCocktailResponse = new IngredientCocktailResponse();
         ingredientCocktailResponse.setName(ingredientCocktail.getIngredient().getName());
         ingredientCocktailResponse.setMeasure(ingredientCocktail.getMeasure());
-        logger.info("Sta ritornando IngredientCocktailResponse", ingredientCocktailResponse);
+        log.info("Sta ritornando IngredientCocktailResponse {}", ingredientCocktailResponse);
         return ingredientCocktailResponse;
     }
 
@@ -94,7 +96,7 @@ public class ConvertUtils {
         drink.setTags(drinkRequest.getTags());
         drink.setIba(drinkRequest.getIba());
         drink.setCreative_commons(drinkRequest.getCreative_commons());
-        logger.info("Ritorno di drink dopo aver settato i valori");
+        log.info("Ritorno di drink dopo aver settato i valori");
         return drink;
     }
 

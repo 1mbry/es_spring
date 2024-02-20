@@ -12,6 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @Embeddable
 public class IngredientCocktailId implements Serializable {
 

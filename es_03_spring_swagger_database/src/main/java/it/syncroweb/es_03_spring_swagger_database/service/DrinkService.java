@@ -12,17 +12,18 @@ import it.syncroweb.es_03_spring_swagger_database.utils.ConvertUtils;
 import it.syncroweb.es_03_spring_swagger_database.utils.FormatLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Slf4j
 @Service
 public class DrinkService {
     private static final FormatLogger logger = new FormatLogger(LogManager.getLogger(DrinkService.class));
-
+    private static final Logger log = LoggerFactory.getLogger(ConvertUtils.class);
     @Autowired
     private DrinkRepository drinkRepository;
 
@@ -60,14 +61,14 @@ public class DrinkService {
 
     //Get all drink
     public List<DrinkResponse> getAllDrink() throws UnprocessableEntityException{
-        logger.info("Inizio Drink Service getAllDrink()");
-        logger.info("Ricerca nel db di tutti i drink");
+        log.info("Inizio Drink Service getAllDrink()");
+        log.info("Ricerca nel db di tutti i drink");
         List<Drink> drinks = drinkRepository.findAll();
-        logger.info("Ritorno di tutte le entity di drink: {}", drinks);
+        log.info("Ritorno di tutte le entity di drink. Numero di drinks: {}", drinks.size());
         if(drinks.isEmpty()){
             throw new UnprocessableEntityException("Drink repository is empty");
         }
-        logger.info("Inizio di mapDrinkResponse() con mapping di DrinkResponse");
+        log.info("Inizio di mapDrinkResponse() con mapping di DrinkResponse");
         return ConvertUtils.mapDrinksResponse(drinks);
         //return DrinkMapper.INSTANCE.toDrinkResponse(drinks);
     }

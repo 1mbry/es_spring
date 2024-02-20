@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
+@ToString
 @Table(name = "drink")
 public class Drink {
 

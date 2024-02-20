@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString
 @Table(name = "ingredient_cocktail")
 public class IngredientCocktail {
 

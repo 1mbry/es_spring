@@ -9,17 +9,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="es_04_loginTest" />
         <module name="es_01" />
-        <module name="es_02" />
-      </profile>
-      <profile name="Annotation profile for es_03_spring_swagger_database" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.5.5.Final/mapstruct-processor-1.5.5.Final.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
-        </processorPath>
         <module name="es_03_spring_swagger_database" />
+        <module name="es_02" />
       </profile>
     </annotationProcessing>
   </component>
