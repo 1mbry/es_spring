@@ -1,9 +1,10 @@
 package it.syncroweb.es_03_spring_swagger_database.utils;
 
-import it.syncroweb.es_03_spring_swagger_database.dto.*;
+import it.syncroweb.es_03_spring_swagger_database.dto.DrinkRequest;
+import it.syncroweb.es_03_spring_swagger_database.dto.IngredientCocktailRequest;
+import it.syncroweb.es_03_spring_swagger_database.dto.InstructionRequest;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
-import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,17 +14,16 @@ import java.util.stream.Collectors;
 
 
 public class ConvertUtils {
-
-    private static final FormatLogger logger = new FormatLogger(LogManager.getLogger(ConvertUtils.class));
     private static final Logger log = LoggerFactory.getLogger(ConvertUtils.class);
-    public static List<DrinkResponse> mapDrinksResponse(List<Drink> drinks) {
+
+    /*public static List<DrinkResponse> mapDrinksResponse(List<Drink> drinks) {
         log.info("Inizio di del processo con mapping di List<DrinkResponse> {}", drinks.size());
         return drinks.stream()
                 .map(ConvertUtils::mapDrinkResponse)
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    public static DrinkResponse mapDrinkResponse(Drink drink){
+    /*public static DrinkResponse mapDrinkResponse(Drink drink){
         log.info("Inizio del processo con mapping di IngredientCocktailResponse con drink.id {}", drink.getId());
         List<IngredientCocktailResponse> ingredientCocktailResponses = drink.getIngredientCocktails().stream()
                 .map(ConvertUtils::mapIngredientCocktailResponse)
@@ -61,26 +61,25 @@ public class ConvertUtils {
         drinkResponse.setInstructions(instructionResponses);
         log.info("Ritorno di drinkResponse dopo aver settato i valori {}", drinkResponse);
         return drinkResponse;
-    }
+    }*/
 
-    public static IngredientCocktailResponse mapIngredientCocktailResponse(IngredientCocktail ingredientCocktail){
+    /*public static IngredientCocktailResponse mapIngredientCocktailResponse(IngredientCocktail ingredientCocktail){
         log.info("Sta processando IngredientCocktail con 'fk_id_drink {}' e 'fk_id_ingredient {}' ", ingredientCocktail.getId().getDrink().getId(), ingredientCocktail.getId().getIngredient().getId());
         IngredientCocktailResponse ingredientCocktailResponse = new IngredientCocktailResponse();
         ingredientCocktailResponse.setName(ingredientCocktail.getIngredient().getName());
         ingredientCocktailResponse.setMeasure(ingredientCocktail.getMeasure());
         log.info("Sta ritornando IngredientCocktailResponse {}", ingredientCocktailResponse);
         return ingredientCocktailResponse;
-    }
+    }*/
 
-    public static InstructionResponse mapInstructionResponse(Instruction instruction){
+    /*public static InstructionResponse mapInstructionResponse(Instruction instruction){
         logger.info("Sta processando Instruction", instruction);
         InstructionResponse instructionResponse = new InstructionResponse();
         instructionResponse.setLanguage(instruction.getLanguage().getName());
         instructionResponse.setText(instruction.getText());
         logger.info("Sta ritornando InstructionResponse", instructionResponse);
         return instructionResponse;
-    }
-
+    }*/
 
     public static Drink mapDrink(DrinkRequest drinkRequest, Alcoholic alcoholic, Category category, Glass glass){
         Drink drink = new Drink();
@@ -96,12 +95,12 @@ public class ConvertUtils {
         drink.setTags(drinkRequest.getTags());
         drink.setIba(drinkRequest.getIba());
         drink.setCreative_commons(drinkRequest.getCreative_commons());
-        log.info("Ritorno di drink dopo aver settato i valori");
+        log.info("Ritorno di drink dopo aver settato i valori : {}", drink);
         return drink;
     }
 
     public static List<Instruction> mapInstructionList(DrinkRequest drinkRequest, Drink drink, HashMap<String,Language> languageHashMap){
-        logger.info("Inizio di drinkRequest.getInstructions().stream() con mapping di Instruction");
+        log.info("Inizio di mapping di Instruction");
         return drinkRequest.getInstructions().stream()
                 .map(instructionRequest -> {
                     try {
@@ -113,9 +112,17 @@ public class ConvertUtils {
                 .collect(Collectors.toList());
     }
 
+    public static Instruction mapInstruction(InstructionRequest instructionRequest, Drink drink, HashMap<String,Language> languageHashMap) throws UnprocessableEntityException{
+        Instruction instruction = new Instruction();
+        instruction.setText(instructionRequest.getText());
+        instruction.setDrink(drink);
+        instruction.setLanguage(languageHashMap.get(instructionRequest.getLanguage()));
+        log.info("Ritorno di instruction dopo aver settato i valori : {}", instruction);
+        return instruction;
+    }
 
     public static List<IngredientCocktail> mapIngredientCocktailList(DrinkRequest drinkRequest, Drink drink, HashMap<String,Ingredient> ingredientHashMap){
-        logger.info("Inizio di drinkRequest.getIngredients().stream() con mapping di IngredientCocktail");
+        log.info("Inizio mapping di IngredientCocktail");
         return drinkRequest.getIngredients().stream()
                 .map(ingredientCocktailRequest -> {
                     try {
@@ -126,16 +133,6 @@ public class ConvertUtils {
                 })
                 .collect(Collectors.toList());
     }
-    public static Instruction mapInstruction(InstructionRequest instructionRequest, Drink drink, HashMap<String,Language> languageHashMap) throws UnprocessableEntityException{
-        Instruction instruction = new Instruction();
-        instruction.setText(instructionRequest.getText());
-        instruction.setDrink(drink);
-        instruction.setLanguage(languageHashMap.get(instructionRequest.getLanguage()));
-        logger.info("Ritorno di instruction dopo aver settato i valori");
-        return instruction;
-    }
-
-    //
 
     public static IngredientCocktail mapIngredientCocktail(IngredientCocktailRequest ingredientCocktailRequest, Drink drink, HashMap<String,Ingredient> ingredientHashMap) throws UnprocessableEntityException{
         IngredientCocktail ingredientCocktail = new IngredientCocktail();
@@ -145,7 +142,7 @@ public class ConvertUtils {
         ingredientCocktail.setIngredient(ingredientHashMap.get(ingredientCocktailRequest.getName()));
         ingredientCocktail.setId(ingredientCocktailId);
         ingredientCocktail.setMeasure(ingredientCocktailRequest.getMeasure());
-        logger.info("Ritorno di ingredientCocktail dopo aver settato i valori");
+        log.info("Ritorno di ingredientCocktail dopo aver settato i valori : {}", ingredientCocktail);
         return ingredientCocktail;
     }
 
@@ -155,12 +152,14 @@ public class ConvertUtils {
         ingredientResponse.setName(ingredient.getName());
         return ingredientResponse;
     }*/
+
     /*public static CategoryResponse mapCategoryResponse(Category category ){
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setId(category.getId());
         categoryResponse.setName(category.getName());
         return categoryResponse;
     }*/
+
     /*public static GlassResponse mapGlassResponse(Glass glass){
         GlassResponse glassResponse = new GlassResponse();
         glassResponse.setId(glass.getId());

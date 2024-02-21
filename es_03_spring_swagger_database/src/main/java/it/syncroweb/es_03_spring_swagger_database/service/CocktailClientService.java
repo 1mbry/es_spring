@@ -4,9 +4,9 @@ import it.syncroweb.es_03_spring_swagger_database.dto.CocktailApiResponse;
 import it.syncroweb.es_03_spring_swagger_database.dto.Languages;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
 import it.syncroweb.es_03_spring_swagger_database.repository.*;
-import it.syncroweb.es_03_spring_swagger_database.utils.FormatLogger;
 import it.syncroweb.es_03_spring_swagger_database.utils.Utils;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class CocktailClientService {
 
-    private static final FormatLogger logger = new FormatLogger(LogManager.getLogger(CocktailClientService.class));
+    private static final Logger log = LoggerFactory.getLogger(CocktailClientService.class);
 
     @Autowired
     private AlcoholicRepository alcoholicRepository;
@@ -47,52 +47,52 @@ public class CocktailClientService {
     @Transactional
     public List<Drink> addDrinks(CocktailApiResponse cocktailApiResponse) {
         try {
-            logger.info("Inizio Cocktail Client Service addDrinks()");
-            logger.info("Inizio di cocktailApiResponse.getDrinks().stream() con mapping di Drink");
+            log.info("Inizio Cocktail ClientService.addDrinks()");
+            log.info("Inizio mapping di Drink");
             return cocktailApiResponse.getDrinks().stream()
                     .map(cocktailResponse -> {
                         Drink drink = new Drink();
                         try {
-                            logger.info("Ricerca del nome nel db drink");
+                            log.info("Ricerca del nome '{}' nel db drink", cocktailResponse.getStrDrink());
                             Drink drinkEntity = drinkRepository.findByName(cocktailResponse.getStrDrink());
-                            logger.info("Ritorno dell'entity drink");
+                            log.info("Ritorno dell'entity drink : {}", drinkEntity);
                             if (drinkEntity != null) {
                                 return drinkEntity;
                             }
                             boolean isAlcoholic = "Alcoholic".equalsIgnoreCase(cocktailResponse.getStrAlcoholic());
-                            logger.info("Ricerca del tipo nel db alcoholic");
+                            log.info("Ricerca del tipo '{}' nel db alcoholic", isAlcoholic);
                             Alcoholic alcoholic = alcoholicRepository.findByType(isAlcoholic);
-                            logger.info("Ritorno dell'entity alcoholic");
+                            log.info("Ritorno dell'entity alcoholic : {}", alcoholic);
                             if (alcoholic == null) {
                                 alcoholic = new Alcoholic();
                                 alcoholic.setType(isAlcoholic);
-                                logger.info("Salvataggio del tipo nel db alcoholic", alcoholic);
+                                log.info("Salvataggio del tipo nel db alcoholic : {}", isAlcoholic);
                                 alcoholic = alcoholicRepository.save(alcoholic);
-                                logger.info("Ritorno dell'entity alcoholic", alcoholic.getId());
+                                log.info("Ritorno dell'entity alcoholic : {}", alcoholic);
                             }
 
                             String newCategory = cocktailResponse.getStrCategory();
-                            logger.info("Ricerca del nome nel db category");
+                            log.info("Ricerca del nome '{}' nel db category", newCategory);
                             Category category = categoryRepository.findByName(newCategory);
-                            logger.info("Ritorno dell'entity category");
+                            log.info("Ritorno dell'entity category : {}", category);
                             if (category == null) {
                                 category = new Category();
                                 category.setName(newCategory);
-                                logger.info("Salvataggio del nome nel db category");
+                                log.info("Salvataggio del nome nel db category : {}", newCategory);
                                 category = categoryRepository.save(category);
-                                logger.info("Ritorno dell'entity category");
+                                log.info("Ritorno dell'entity category : {}", category);
                             }
 
                             String newGlass = cocktailResponse.getStrGlass();
-                            logger.info("Ricerca del nome nel db glass");
+                            log.info("Ricerca del nome '{}' nel db glass", newGlass);
                             Glass glass = glassRepository.findByName(newGlass);
-                            logger.info("Ritorno dell'enity glass");
+                            log.info("Ritorno dell'enity glass : {}", glass);
                             if (glass == null) {
                                 glass = new Glass();
                                 glass.setName(newGlass);
-                                logger.info("Salvataggio del nome nel db glass");
+                                log.info("Salvataggio del nome nel db glass : {}", newGlass);
                                 glass = glassRepository.save(glass);
-                                logger.info("Ritorno dell'entity glass");
+                                log.info("Ritorno dell'entity glass : {}", glass);
                             }
 
 
@@ -109,10 +109,10 @@ public class CocktailClientService {
                             drink.setTags(cocktailResponse.getStrTags());
                             drink.setIba(cocktailResponse.getStrIBA());
                             drink.setCreative_commons(cocktailResponse.getStrCreativeCommonsConfirmed());
-                            logger.info("Salvataggio del drink nel db drink");
+                            log.info("Salvataggio del drink nel db drink : {}", drink);
                             drinkRepository.save(drink);
 
-                            logger.info("Inizio Arrays.stream() per le instruction and language");
+                            log.info("Inizio ciclo per le instruction and language");
                             Arrays.stream(cocktailResponse.getClass().getDeclaredFields())
                                     .filter(field -> field.getName().startsWith("strInstructions"))
                                     .forEach(field -> {
@@ -126,26 +126,26 @@ public class CocktailClientService {
                                             instruction = "No instructions available";
                                         }
 
-                                        logger.info("Ricerca del nome nel db language");
+                                        log.info("Ricerca del nome '{}' nel db language", languageName);
                                         Language language = languageRepository.findByName(languageName);
-                                        logger.info("Ritorno dell'entity language");
+                                        log.info("Ritorno dell'entity language : {}", language);
                                         if (language == null) {
                                             language = new Language();
                                             language.setName(languageName);
-                                            logger.info("Salvataggio del nome nel db language");
+                                            log.info("Salvataggio del nome nel db language : {}", languageName);
                                             language = languageRepository.save(language);
-                                            logger.info("Ritorno dell'entity language");
+                                            log.info("Ritorno dell'entity language : {}", language);
                                         }
 
                                         Instruction instruction1 = new Instruction();
                                         instruction1.setText(instruction);
                                         instruction1.setLanguage(language);
                                         instruction1.setDrink(drink);
-                                        logger.info("Salvataggio dell'instruction nel db instruction");
+                                        log.info("Salvataggio dell'instruction nel db instruction : {}", instruction1);
                                         instructionRepository.save(instruction1);
                                     });
 
-                            logger.info("Inizio Arrays.stream() per ingredient e ingredientCocktail");
+                            log.info("Inizio ciclo per ingredient e ingredientCocktail");
                             Arrays.stream(cocktailResponse.getClass().getDeclaredFields())
                                     .filter(field -> field.getName().startsWith("strIngredient") || field.getName().startsWith("strMeasure"))
                                     .forEach(field -> {
@@ -156,15 +156,15 @@ public class CocktailClientService {
 
                                             if (ingredientName != null && !ingredientName.isEmpty()) {
 
-                                                logger.info("Ricerca del nome nel db ingredient");
+                                                log.info("Ricerca del nome '{}' nel db ingredient", ingredientName);
                                                 Ingredient ingredient = ingredientRepository.findByName(ingredientName);
-                                                logger.info("Ritorno dell'entity ingredient");
+                                                log.info("Ritorno dell'entity ingredient : {}", ingredient);
                                                 if (ingredient == null) {
                                                     ingredient = new Ingredient();
                                                     ingredient.setName(ingredientName);
-                                                    logger.info("Salvataggio del nome nel db ingredient");
+                                                    log.info("Salvataggio del nome nel db ingredient : {}", ingredientName);
                                                     ingredient = ingredientRepository.save(ingredient);
-                                                    logger.info("Ritorno dell'entity ingredient");
+                                                    log.info("Ritorno dell'entity ingredient : {}", ingredient);
                                                 }
 
                                                 String measureFieldName = "strMeasure" + index;
@@ -178,15 +178,14 @@ public class CocktailClientService {
                                                     ingredientCocktail.setId(ingredientCocktailId);
                                                     ingredientCocktail.setIngredient(ingredient);
                                                     ingredientCocktail.setMeasure(measureValue);
-                                                    logger.info("Salvataggio dell ingredientCocktail nel db ingredient_cocktail");
+                                                    log.info("Salvataggio dell ingredientCocktail nel db ingredient_cocktail : {}", ingredientCocktail);
                                                     ingredientCocktailRepository.save(ingredientCocktail);
                                                 }
                                             }
                                         }
                                     });
-                            logger.info("Ritorno del drink dopo aver settato i valori");
                         }catch (Exception e){
-                            logger.info("Deleting the drink due to error...");
+                            log.info("Errore nella lettura del drink");
 
                             boolean hasNullIngredientCocktails = drink.getIngredientCocktails().stream()
                                     .anyMatch(ingredientCocktail -> ingredientCocktail.getId().getDrink() == null
@@ -195,22 +194,22 @@ public class CocktailClientService {
                             boolean hasNullInstructions = drink.getInstructions().stream()
                                     .anyMatch(instruction -> instruction.getDrink() == null || instruction.getLanguage() == null);
                             if (hasNullIngredientCocktails || hasNullInstructions) {
-                                logger.warn("Ingredients e Instructions presentano valori nulli");
+                                log.warn("Ingredients e Instructions presentano valori nulli");
                                 instructionRepository.deleteAll(drink.getInstructions());
                                 ingredientCocktailRepository.deleteAll(drink.getIngredientCocktails());
-                                logger.info("Elimino ingredienti e istruzioni");
+                                log.info("Elimino ingredienti e istruzioni");
                             }
                             if(drink.getName() == null || drink.getCategory() == null || drink.getAlcoholic() == null || drink.getGlass() == null ){
-                                logger.info("Il drink presenta valori nulli");
+                                log.info("Il drink presenta valori nulli");
                                 drinkRepository.delete(drink);
-                                logger.info("Elimino il drink");
+                                log.info("Elimino il drink");
                             }
                         }
+                        log.info("Ritorno del drink dopo aver settato i valori : {}", drink);
                         return drink;
                     })
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            //drinkRepository.delete(drink);
             throw new RuntimeException(e);
         }
     }

@@ -5,6 +5,7 @@ import it.syncroweb.es_03_spring_swagger_database.dto.DrinkResponse;
 import it.syncroweb.es_03_spring_swagger_database.dto.IngredientCocktailRequest;
 import it.syncroweb.es_03_spring_swagger_database.dto.InstructionRequest;
 import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityException;
+import it.syncroweb.es_03_spring_swagger_database.mapper.DrinkMapper;
 import it.syncroweb.es_03_spring_swagger_database.model.*;
 import it.syncroweb.es_03_spring_swagger_database.repository.*;
 import it.syncroweb.es_03_spring_swagger_database.utils.ConvertUtils;
@@ -44,75 +45,64 @@ public class DrinkService {
     @Autowired
     private GlassRepository glassRepository;
 
-
-    /*public DrinkResponse getDrinkById(Integer drinkId) {
-        // Retrieve the drink entity from the repository by ID
-        Drink drink = drinkRepository.getReferenceById(drinkId);
-
-        // Map the drink entity to a DrinkResponse DTO using the mapper
-        DrinkResponse drinkResponse = DrinkMapper.INSTANCE.toDrinkResponse(drink);
-
-        return drinkResponse;
-    }*/
-
-    //Get all drink
+    //Get all drink usando MapStruct oppure ConvertUtils
     public List<DrinkResponse> getAllDrink() throws UnprocessableEntityException{
-        log.info("Inizio Drink Service getAllDrink()");
+        log.info("Inizio DrinkService.getAllDrink()");
         log.info("Ricerca nel db di tutti i drink");
         List<Drink> drinks = drinkRepository.findAll();
         log.info("Ritorno del numero di drinks: {}", drinks.size());
         if(drinks.isEmpty()){
             throw new UnprocessableEntityException("Drink repository is empty");
         }
-        log.info("Inizio di mapDrinkResponse() con mapping di DrinkResponse");
-        return ConvertUtils.mapDrinksResponse(drinks);
-        //return DrinkMapper.INSTANCE.toDrinkResponse(drinks);
+        log.info("Inizio mapping di DrinkResponse");
+        //return ConvertUtils.mapDrinksResponse(drinks);
+        return DrinkMapper.INSTANCE.mapDrinkList(drinks);
     }
 
     //Post create one drink
     public DrinkResponse addDrink(DrinkRequest drinkRequest) throws UnprocessableEntityException {
         Drink drink = null;
         try {
-            log.info("Inizio Drink Service addDrink()");
+            log.info("Inizio DrinkService.addDrink()");
 
-            log.info("Ricerca nel db del tipo di alcoholic");
+            log.info("Ricerca nel db del tipo di alcoholic : {}", drinkRequest.isAlcoholic());
             Alcoholic alcoholic = alcoholicRepository.findByType(drinkRequest.isAlcoholic());
-            log.info("Ritorno dell'entity alcoholic");
+            log.info("Ritorno dell'entity alcoholic : {}", alcoholic);
             if (alcoholic == null) {
                 throw new UnprocessableEntityException("Alcoholic not found");
             }
 
             //Ricavo Category dal database usando il valore string
             String newCategory = drinkRequest.getCategory();
-            log.info("Ricerca nel db del nome della category");
+            log.info("Ricerca nel db del nome della category : {}", newCategory);
             Category category = categoryRepository.findByName(newCategory);
-            log.info("Ritorno dell'entity category");
+            log.info("Ritorno dell'entity category : {}", category);
             if (category == null) {
                 category = new Category();
                 category.setName(newCategory);
-                log.info("Salvataggio della nuova category nel db");
+                log.info("Salvataggio della nuova category nel db : {}", category);
                 category = categoryRepository.save(category);
-                log.info("Ritorno dell'entity category");
+                log.info("Ritorno dell'entity category : {}", category);
             }
 
             //Ricavo Glass dal database usando il valore string
             String newGlass = drinkRequest.getGlass();
-            log.info("Ricerca nel db del nome del glass");
+            log.info("Ricerca nel db del nome del glass : {}", newGlass);
             Glass glass = glassRepository.findByName(newGlass);
-            log.info("Ritorno dell'entity glass");
+            log.info("Ritorno dell'entity glass : {}", glass);
             if (glass == null) {
                 glass = new Glass();
                 glass.setName(newGlass);
-                log.info("Salvataggio del nuovo glass nel db");
+                log.info("Salvataggio del nuovo glass nel db : {}", glass);
                 glass = glassRepository.save(glass);
-                log.info("Ritorno dell'entity glass");
+                log.info("Ritorno dell'entity glass : {}", glass);
             }
 
             HashMap<String, Language> languageHashMap = new HashMap<>();
             for (InstructionRequest instructionRequest : drinkRequest.getInstructions()) {
-                log.info("Ricerca nel db del nome del language");
+                log.info("Ricerca nel db del nome del language : {}", instructionRequest.getLanguage());
                 Language language = languageRepository.findByName(instructionRequest.getLanguage());
-                log.info("Ritorno dell'entity language");
+                log.info("Ritorno dell'entity language : {}", language);
                 if (language == null) {
                     throw new UnprocessableEntityException("Language not found");
                 }
@@ -121,52 +111,50 @@ public class DrinkService {
 
             HashMap<String, Ingredient> ingredientHashMap = new HashMap<>();
             for (IngredientCocktailRequest ingredientCocktailRequest : drinkRequest.getIngredients()) {
-                log.info("Ricerca nel db del nome dell'ingredient");
+                log.info("Ricerca nel db del nome dell'ingredient : {}", ingredientCocktailRequest.getName());
                 Ingredient ingredient = ingredientRepository.findByName(ingredientCocktailRequest.getName());
-                log.info("Ritorno dell'entity ingredient");
+                log.info("Ritorno dell'entity ingredient : {}", ingredient);
                 if (ingredient == null) {
                     ingredient = new Ingredient();
                     ingredient.setName(drinkRequest.getName());
-                    log.info("Salvataggio dell'ingrediente nel db");
+                    log.info("Salvataggio dell'ingrediente nel db : {}", ingredient);
                     ingredient = ingredientRepository.save(ingredient);
-                    log.info("Ritorno dell'entity ingredient");
+                    log.info("Ritorno dell'entity ingredient : {}", ingredient);
                 }
                 ingredientHashMap.put(ingredientCocktailRequest.getName(), ingredient);
             }
 
-            log.info("Inizio di mapDrink() con mapping di Drink");
+            log.info("Inizio mapping di Drink");
             drink = ConvertUtils.mapDrink(drinkRequest, alcoholic, category, glass);
-            log.info("Salvataggio del drink nel db");
+            log.info("Salvataggio del drink nel db : {}", drink);
             drinkRepository.save(drink);
 
-            log.info("Inizio di mapInstructionList() con mapping di Instruction");
+            log.info("Inizio mapping di Instruction");
             List<Instruction> instructions = ConvertUtils.mapInstructionList(drinkRequest, drink, languageHashMap);
-            log.info("Salvataggio dell'instruction nel db");
+            log.info("Salvataggio dell'instruction nel db : {}", instructions);
             instructionRepository.saveAll(instructions);
             drink.setInstructions(instructions);
 
-            log.info("Inizio di mapIngredientCocktailList() con mapping di IngredientCocktails");
+            log.info("Inizio mapping di IngredientCocktails");
             List<IngredientCocktail> ingredientCocktails = ConvertUtils.mapIngredientCocktailList(drinkRequest, drink, ingredientHashMap);
-            log.info("Salvataggio dell'ingredientCocktail nel db");
+            log.info("Salvataggio dell'ingredientCocktail nel db : {}", ingredientCocktails);
             ingredientCocktailRepository.saveAll(ingredientCocktails);
             drink.setIngredientCocktails(ingredientCocktails);
 
-            log.info("Inizio di mapDrinkResponse() con mapping di DrinkResponse");
-            return ConvertUtils.mapDrinkResponse(drink);
+            log.info("Inizio mapping di DrinkResponse:{}", drink);
+            //return ConvertUtils.mapDrinkResponse(drink);
+            return DrinkMapper.INSTANCE.mapDrink(drink);
         } catch (Exception e) {
-            log.error("Error occurred while adding drink: {}", e.getMessage());
+            log.error("Errore durante l'aggiunta del drink: {}", e.getMessage());
             if (drink != null) {
-                log.info("Deleting the drink due to error...");
-
                 boolean hasNullIngredientCocktails = drink.getIngredientCocktails().stream()
                         .anyMatch(ingredientCocktail -> ingredientCocktail.getId().getDrink() == null
                                 || ingredientCocktail.getId().getIngredient() == null);
 
-                // Check if instructions have null foreign keys
                 boolean hasNullInstructions = drink.getInstructions().stream()
                         .anyMatch(instruction -> instruction.getDrink() == null || instruction.getLanguage() == null);
                 if (hasNullIngredientCocktails || hasNullInstructions) {
-                    log.warn("Some IngredientCocktails or Instructions have null foreign keys, skipping deletion.");
+                    log.warn("IngredientCocktails or Instructions presenta foreign keys nulle");
                     instructionRepository.deleteAll(drink.getInstructions());
                     ingredientCocktailRepository.deleteAll(drink.getIngredientCocktails());
                     log.info("Elimino ingredienti e istruzioni");

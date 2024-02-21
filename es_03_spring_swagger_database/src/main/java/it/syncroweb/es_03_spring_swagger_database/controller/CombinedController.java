@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/category-glass-ingredient-language")
 public class CombinedController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CombinedController.class);
+    private static final Logger log = LoggerFactory.getLogger(CombinedController.class);
 
     @Autowired
     private CombinedService combinedService;
 
     @GetMapping("")
     public ResponseEntity<CombinedResponse> getAll()  {
-        logger.info("Inizio richiesta di Combined Controller getAll()");
+        log.info("Inizio richiesta di CombinedController.getAll()");
         CombinedResponse combinedResponse = combinedService.getAll();
-        logger.info("Fine richiesta con body di risposta combinedResponse");
+        log.info("Fine richiesta con body di risposta combinedResponse : {}", combinedResponse);
         return new ResponseEntity<>(combinedResponse, HttpStatus.OK);
     }
 }

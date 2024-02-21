@@ -35,4 +35,5 @@ public interface CombinedMapper {
     List<LanguageResponse> toLanguageResponseList(List<Language> languages);
 
     List<IngredientResponse> toIngredientResponseList(List<Ingredient> ingredients);
+
 }

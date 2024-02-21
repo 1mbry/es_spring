@@ -5,7 +5,6 @@ import it.syncroweb.es_03_spring_swagger_database.exception.UnprocessableEntityE
 import it.syncroweb.es_03_spring_swagger_database.feign.CocktailClient;
 import it.syncroweb.es_03_spring_swagger_database.model.Drink;
 import it.syncroweb.es_03_spring_swagger_database.service.CocktailClientService;
-import it.syncroweb.es_03_spring_swagger_database.service.CombinedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import java.util.List;
 @RequestMapping("/feign")
 public class FeignController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CombinedService.class);
+    private static final Logger log = LoggerFactory.getLogger(FeignController.class);
 
     @Autowired
     private CocktailClient cocktailClient;
@@ -31,15 +30,15 @@ public class FeignController {
 
     @GetMapping("/cocktail")
     public ResponseEntity<List<Drink>> getCocktail() throws UnprocessableEntityException {
-        logger.info("Inizio richiesta cocktailClient.getCocktail()");
+        log.info("Inizio richiesta CocktailClient.getCocktail()");
         CocktailApiResponse cocktailApiResponse = cocktailClient.getCocktail();
-        logger.info("Ritorno del body JSON");
-        logger.info("Inizio richiesta di FeignController addDrinks()");
+        log.info("Ritorno del body : {}", cocktailApiResponse);
+        log.info("Inizio richiesta di FeignController cocktailClientService.addDrinks()");
         List<Drink> drinks = cocktailClientService.addDrinks(cocktailApiResponse);
         if (drinks.isEmpty()){
             throw new UnprocessableEntityException("Errore");
         }
-        logger.info("Fine richiesta con body di risposta List<Drink>");
+        log.info("Fine richiesta con ritorno di tutti i drinks");
         return new ResponseEntity<>(drinks, HttpStatus.OK);
     }
 

@@ -13,6 +13,8 @@ spring:
         format_sql: true
     database: mysql
     generate-ddl: true
+  profiles:
+    active: dev
 
 server:
   port: 8081
@@ -32,6 +34,3 @@ logging:
     rollingpolicy:
       max-file-size: "10MB"
       max-history: "10"
-
-#${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- ${LOGGED_APPLICATION_NAME:-}[%t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
-#%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n
