@@ -14,10 +14,10 @@ spring:
     database: mysql
     generate-ddl: true
   profiles:
-    active: dev
+    active:
 
 server:
-  port: 8081
+  port: 8080
 
 logging:
   file:

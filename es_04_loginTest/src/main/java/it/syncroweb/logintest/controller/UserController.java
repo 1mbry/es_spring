@@ -1,5 +1,5 @@
 package it.syncroweb.logintest.controller;
-
+/*
 import it.syncroweb.logintest.model.User;
 import it.syncroweb.logintest.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,3 +34,4 @@ public class UserController {
         return userService.deleteUser(id, user);
     }
 }
+*/
