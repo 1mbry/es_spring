@@ -13,12 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "user_table")
 @Entity
+@Table(name = "user_table")
 public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "email")
@@ -37,5 +38,8 @@ public class UserEntity {
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
 
 }

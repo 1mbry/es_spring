@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "token_type")
+public class TokenType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +21,4 @@ public class Role {
 
     @Column(name = "name")
     private String name;
-
 }

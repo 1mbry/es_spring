@@ -1,9 +1,13 @@
 package it.syncroweb.logintest.service;
 
+import it.syncroweb.logintest.dto.AuthenticationResponse;
 import it.syncroweb.logintest.dto.RegisterRequest;
-import it.syncroweb.logintest.model.Role;
+import it.syncroweb.logintest.model.Token;
+import it.syncroweb.logintest.model.TokenType;
 import it.syncroweb.logintest.model.UserEntity;
 import it.syncroweb.logintest.repository.RoleRepository;
+import it.syncroweb.logintest.repository.TokenRepository;
+import it.syncroweb.logintest.repository.TokenTypeRepository;
 import it.syncroweb.logintest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +30,44 @@ public class AuthenticationService {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
+    private TokenTypeRepository tokenTypeRepository;
 
-    public String register(RegisterRequest request) {
-        UserEntity user = new UserEntity();
+    public AuthenticationResponse register(RegisterRequest request) {
+        UserEntity user = UserEntity.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(Collections.singletonList(roleRepository.findByName(request.getRole()).get()))
+                .build();
+        user = userRepository.save(user);
+        String jwtToken = jwtService.generateToken(user);
+        Token token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenTypes(Collections.singletonList(tokenTypeRepository.findByName("BEARER").get()))
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+        /*UserEntity user = new UserEntity();
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));*/
 
-        Role roles = roleRepository.findByName(request.getRole()).get();
+        /*Role roles = roleRepository.findByName(request.getRole()).get();
         user.setRoles(Collections.singletonList(roles));
+*/
 
-        userRepository.save(user);
-        return "user registered";
+
     }
 
     /*public AuthenticationResponse authenticate(AuthenticationRequest request) {

@@ -1,14 +1,13 @@
 package it.syncroweb.logintest.repository;
 
-import it.syncroweb.logintest.model.UserEntity;
+import it.syncroweb.logintest.model.TokenType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity,Long> {
+public interface TokenTypeRepository extends JpaRepository<TokenType, Long> {
 
-    Optional<UserEntity> findByEmail(String email);
-
+    Optional<TokenType> findByName(String name);
 }
