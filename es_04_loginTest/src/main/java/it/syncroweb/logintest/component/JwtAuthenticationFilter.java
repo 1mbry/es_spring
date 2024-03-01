@@ -1,4 +1,4 @@
-package it.syncroweb.logintest.config;
+package it.syncroweb.logintest.component;
 
 import it.syncroweb.logintest.service.JwtService;
 import jakarta.servlet.FilterChain;
