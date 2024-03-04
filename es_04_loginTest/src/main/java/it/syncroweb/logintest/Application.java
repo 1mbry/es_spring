@@ -26,19 +26,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 						name = "license",
 						url = "ioan"
 				)
-		)/*,
+		),
 		security = {
 				@SecurityRequirement(name = "bearerAuth")
-		}*/
+		}
 )
-/*@SecurityScheme(
+@SecurityScheme(
 		name = "bearerAuth",
 		description = "JWT authentication",
 		scheme = "bearer",
 		type = SecuritySchemeType.HTTP,
 		bearerFormat = "JWT",
 		in = SecuritySchemeIn.HEADER
-)*/
+)
 public class Application {
 
 	public static void main(String[] args) {

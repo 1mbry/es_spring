@@ -28,13 +28,14 @@ public class Token {
             inverseJoinColumns = @JoinColumn(name = "token_type_id", referencedColumnName = "id"))
     private List<TokenType> tokenTypes;
 
-    @Column(name = "is_expired")
+    @Column(name = "expired")
     private boolean expired;
 
-    @Column(name = "is_revoked")
+    @Column(name = "revoked")
     private boolean revoked;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
 }
