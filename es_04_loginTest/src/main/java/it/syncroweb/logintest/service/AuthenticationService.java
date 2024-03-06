@@ -60,7 +60,7 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
 
-        saveUsertoken(savedUser, jwtToken);
+        saveUserToken(savedUser, jwtToken);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -70,12 +70,7 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         UserEntity user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
@@ -84,7 +79,7 @@ public class AuthenticationService {
 
         revokeAllUserTokens(user);
 
-        saveUsertoken(user, jwtToken);
+        saveUserToken(user, jwtToken);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -104,7 +99,7 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    private void saveUsertoken(UserEntity savedUser, String jwtToken) {
+    private void saveUserToken(UserEntity savedUser, String jwtToken) {
         Token token = Token.builder()
                 .user(savedUser)
                 .token(jwtToken)
@@ -131,7 +126,7 @@ public class AuthenticationService {
             if (jwtService.isTokenValid(refreshToken, userDetails)) {
                 String accessToken = jwtService.generateToken(userEntity);
                 revokeAllUserTokens(userEntity);
-                saveUsertoken(userEntity, accessToken);
+                saveUserToken(userEntity, accessToken);
                 AuthenticationResponse authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)

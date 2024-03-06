@@ -1,20 +1,13 @@
 package it.syncroweb.logintest.service;
 
-import it.syncroweb.logintest.model.Role;
 import it.syncroweb.logintest.model.UserEntity;
+import it.syncroweb.logintest.model.impl.CustomUserDetailsImpl;
 import it.syncroweb.logintest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,10 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("Username not found"));
-        return new User(user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        System.out.println(user.getTokens());
+        return CustomUserDetailsImpl.build(user);
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
 }

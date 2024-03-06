@@ -1,18 +1,15 @@
-package it.syncroweb.logintest.config;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
+package it.syncroweb.logintest.utils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class CustomPasswordEncoder implements PasswordEncoder {
+public class MD5HashUtils {
 
-    @Override
-    public String encode(CharSequence rawPassword) {
+    public static String getMD5Hash(CharSequence input){
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(rawPassword.toString().getBytes());
+            md.update(input.toString().getBytes());
             BigInteger hash = new BigInteger(1,md.digest());
             String result = hash.toString(16);
             while (result.length() < 32){
@@ -22,11 +19,5 @@ public class CustomPasswordEncoder implements PasswordEncoder {
         }catch (NoSuchAlgorithmException e){
             throw new RuntimeException(e);
         }
-
-    }
-
-    @Override
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return encode(rawPassword).equals(encodedPassword);
     }
 }

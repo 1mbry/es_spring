@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/token")
@@ -24,5 +21,10 @@ public class TokenController {
     public ResponseEntity<TokenType> createTokenType(@RequestBody TokenType tokenType) {
         TokenType createdTokenType = tokenService.create(tokenType);
         return new ResponseEntity<>(createdTokenType, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/info")
+    public String getUserInfo(@RequestAttribute("id") String idUser){
+        return "User ID: " + idUser;
     }
 }

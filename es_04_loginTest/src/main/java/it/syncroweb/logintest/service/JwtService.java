@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,7 +25,6 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
-
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -54,6 +51,8 @@ public class JwtService {
     private String buildToken(Map<String, Object> extraClaims, UserEntity userEntity, long expiration){
         return Jwts.builder()
                 .setClaims(extraClaims)
+                .setHeaderParam("typ","jwt")
+                .setId(String.valueOf(userEntity.getId()))
                 .setSubject(userEntity.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -84,9 +83,16 @@ public class JwtService {
                 .getBody();
     }
 
+    public String getIdFromJwtToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody().getId();
+    }
+
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 
 }

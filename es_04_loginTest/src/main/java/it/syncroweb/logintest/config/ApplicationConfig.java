@@ -1,5 +1,6 @@
 package it.syncroweb.logintest.config;
 
+import it.syncroweb.logintest.utils.CustomPasswordEncoder;
 import it.syncroweb.logintest.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
