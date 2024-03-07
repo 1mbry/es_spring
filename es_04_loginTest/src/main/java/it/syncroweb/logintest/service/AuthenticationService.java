@@ -10,10 +10,12 @@ import it.syncroweb.logintest.repository.RoleRepository;
 import it.syncroweb.logintest.repository.TokenRepository;
 import it.syncroweb.logintest.repository.TokenTypeRepository;
 import it.syncroweb.logintest.repository.UserRepository;
+import it.syncroweb.logintest.utils.OnRegistrationCompleteEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,14 +47,16 @@ public class AuthenticationService {
     private TokenTypeRepository tokenTypeRepository;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest registerRequest, HttpServletRequest request) {
         UserEntity user = UserEntity.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(Collections.singletonList(roleRepository.findByName(request.getRole()).get()))
+                .firstname(registerRequest.getFirstname())
+                .lastname(registerRequest.getLastname())
+                .email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .roles(Collections.singletonList(roleRepository.findByName(registerRequest.getRole()).get()))
                 .build();
 
         UserEntity savedUser = userRepository.save(user);
@@ -61,6 +65,10 @@ public class AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(savedUser);
 
         saveUserToken(savedUser, jwtToken);
+
+        // mi serve per mandare una mail di conferma
+        String appUrl = request.getContextPath();
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl, request.getLocale(),user));
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -138,4 +146,6 @@ public class AuthenticationService {
             }
         }
     }
+
+
 }
