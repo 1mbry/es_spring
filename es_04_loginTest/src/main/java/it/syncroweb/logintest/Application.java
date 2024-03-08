@@ -52,11 +52,11 @@ public class Application {
 
 	@Autowired
 	private EmailSenderService senderService;
-	@EventListener(ApplicationReadyEvent.class)
+	/*@EventListener(ApplicationReadyEvent.class)
 	public void triggerMail() throws MessagingException {
 		senderService.sendSimpleEmail("petrisor.imbrea@gmail.com",
 				"This is email body",
 				"This is email subject");
 
-	}
+	}*/
 }

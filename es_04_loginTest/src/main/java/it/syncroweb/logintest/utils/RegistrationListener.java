@@ -1,6 +1,7 @@
 package it.syncroweb.logintest.utils;
 
 import it.syncroweb.logintest.model.UserEntity;
+import it.syncroweb.logintest.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -13,6 +14,8 @@ import java.util.UUID;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
     private MessageSource messages;
@@ -25,17 +28,18 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         UserEntity user = event.getUser();
         String token = UUID.randomUUID().toString();
+        jwtService.createEmailToken(user,token);
 
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
         String confirmationUrl
-                = event.getAppUrl() + "/regitrationConfirm?token=" + token;
-        String message = messages.getMessage("message.regSucc", null, event.getLocale());
+                = event.getAppUrl() + "/api/v1/auth/registrationConfirm?token=" + token;
+        String message = messages.getMessage("test", null, event.getLocale());
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "\r\n" + "http://localhost:8080" + confirmationUrl);
+        email.setText(message + "\r\n" + "http://localhost:8081" + confirmationUrl);
         mailSender.send(email);
     }
 }

@@ -5,7 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import it.syncroweb.logintest.model.EmailToken;
 import it.syncroweb.logintest.model.UserEntity;
+import it.syncroweb.logintest.repository.EmailTokenRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
+
+    @Autowired
+    private EmailTokenRepository emailTokenRepository;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -60,12 +66,14 @@ public class JwtService {
                 .compact();
     }
 
-    private String buildConfirmTokenRegistration(long expiration){
-        return Jwts.builder()
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+    //EMAIL
+    public void createEmailToken(UserEntity user, String token){
+        EmailToken emailToken = new EmailToken(user,token);
+        emailTokenRepository.save(emailToken);
+    }
+
+    public EmailToken getEmailToken(String token){
+        return emailTokenRepository.findByToken(token);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){

@@ -1,14 +1,18 @@
 spring:
+  messages:
+    basename: messages
+  config:
+    import: env.properties
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/es_04_login_test_dev
-    username: root
-    password:
+    url: ${DB_DATABSE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   mail:
     host: smtp.gmail.com
     port: 587
-    username: pietro.imbrea@gmail.com
-    password: gmupqrsdhurfjfse
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -16,8 +20,8 @@ spring:
           starttls:
             enable: true
             required: true
-    protocol: smtp
-
+          ssl:
+            trust: smtp.gmail.com
 
   jpa:
     show-sql: true
@@ -33,8 +37,9 @@ server:
 application:
   security:
     jwt:
-      secret-key: 332225467159544c413f23236d56693a486372456534494b74344c3b66
+      secret-key: ${JWT_SECRET_KEY}
       expiration: 122222222 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+
 

@@ -64,11 +64,12 @@ public class AuthenticationService {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
 
-        saveUserToken(savedUser, jwtToken);
+        List<Token> tokens = saveUserToken(savedUser, jwtToken);
+        savedUser.setTokens(tokens);
 
         // mi serve per mandare una mail di conferma
         String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl, request.getLocale(),user));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl, request.getLocale(),savedUser));
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -107,7 +108,7 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    private void saveUserToken(UserEntity savedUser, String jwtToken) {
+    private List<Token> saveUserToken(UserEntity savedUser, String jwtToken) {
         Token token = Token.builder()
                 .user(savedUser)
                 .token(jwtToken)
@@ -115,7 +116,7 @@ public class AuthenticationService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepository.save(token);
+        return Collections.singletonList(tokenRepository.save(token));
     }
 
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
