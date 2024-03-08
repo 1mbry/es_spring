@@ -31,5 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-env.properties
-messages.properties
+
+es_04_loginTest/src/main/resources/env.properties
+es_04_loginTest/src/main/resources/messages.properties
