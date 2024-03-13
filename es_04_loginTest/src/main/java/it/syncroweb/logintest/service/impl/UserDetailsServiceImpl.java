@@ -1,4 +1,4 @@
-package it.syncroweb.logintest.service;
+package it.syncroweb.logintest.service.impl;
 
 import it.syncroweb.logintest.model.UserEntity;
 import it.syncroweb.logintest.model.impl.CustomUserDetailsImpl;
@@ -16,8 +16,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("Username not found"));
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsernameOrEmail(usernameOrEmail,usernameOrEmail).orElseThrow(()-> new UsernameNotFoundException("Username not found"));
         System.out.println(user.getTokens());
         return CustomUserDetailsImpl.build(user);
     }

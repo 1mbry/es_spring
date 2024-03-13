@@ -1,7 +1,7 @@
 package it.syncroweb.logintest.config;
 
 import it.syncroweb.logintest.utils.CustomPasswordEncoder;
-import it.syncroweb.logintest.service.UserDetailsServiceImpl;
+import it.syncroweb.logintest.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +41,6 @@ public class ApplicationConfig {
 
     @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
     private String mailServerStartTls;
-
-
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;

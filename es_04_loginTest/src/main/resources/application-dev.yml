@@ -30,6 +30,8 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: create-drop
+    database: mysql
+    open-in-view: false
 
 server:
   port: 8081

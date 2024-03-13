@@ -21,6 +21,11 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] WHITE_LIST_URL = {"/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/**",
+            "/api/**"};
+
     @Autowired
     private JwtAuthenticationFilter jwtAuthFilter;
     @Autowired
@@ -31,7 +36,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(request -> request.requestMatchers("/api/**")
+            .authorizeHttpRequests(request -> request.requestMatchers(WHITE_LIST_URL)
                     .permitAll()
                     .anyRequest()
                     .authenticated())
@@ -45,12 +50,5 @@ public class SecurityConfig {
                     );
 
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers(
-                "/swagger-ui/**", "/v3/api-docs/**", "/**"
-        );
     }
 }

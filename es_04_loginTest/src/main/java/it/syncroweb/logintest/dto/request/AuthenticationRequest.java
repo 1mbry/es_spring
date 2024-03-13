@@ -1,5 +1,6 @@
-package it.syncroweb.logintest.dto;
+package it.syncroweb.logintest.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationRequest {
 
-    private String email;
-    String password;
+    private String usernameOrEmail;
+
+    private String password;
 }

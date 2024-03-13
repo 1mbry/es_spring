@@ -1,11 +1,10 @@
 package it.syncroweb.logintest.controller;
 
-import it.syncroweb.logintest.dto.AuthenticationRequest;
-import it.syncroweb.logintest.dto.AuthenticationResponse;
-import it.syncroweb.logintest.dto.RegisterRequest;
+import it.syncroweb.logintest.dto.request.AuthenticationRequest;
+import it.syncroweb.logintest.dto.response.AuthenticationResponse;
+import it.syncroweb.logintest.dto.request.RegisterRequest;
 import it.syncroweb.logintest.model.EmailToken;
 import it.syncroweb.logintest.model.UserEntity;
-import it.syncroweb.logintest.repository.EmailTokenRepository;
 import it.syncroweb.logintest.repository.UserRepository;
 import it.syncroweb.logintest.service.AuthenticationService;
 import it.syncroweb.logintest.service.JwtService;
@@ -38,8 +37,8 @@ public class AuthenticationController {
     private JwtService jwtService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request){
-        return new ResponseEntity<>(service.register(registerRequest,request), HttpStatus.OK);
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest){
+        return new ResponseEntity<>(service.register(registerRequest), HttpStatus.OK);
     }
 
     @PostMapping("/authenticate")

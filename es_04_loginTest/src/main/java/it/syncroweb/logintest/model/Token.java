@@ -9,9 +9,7 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +24,7 @@ public class Token {
     @Column(name = "token")
     private String token;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "token_and_type", joinColumns = @JoinColumn(name = "token_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "token_type_id", referencedColumnName = "id"))
     private List<TokenType> tokenTypes;

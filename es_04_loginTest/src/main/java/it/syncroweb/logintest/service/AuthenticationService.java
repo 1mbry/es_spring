@@ -1,9 +1,9 @@
 package it.syncroweb.logintest.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.syncroweb.logintest.dto.AuthenticationRequest;
-import it.syncroweb.logintest.dto.AuthenticationResponse;
-import it.syncroweb.logintest.dto.RegisterRequest;
+import it.syncroweb.logintest.dto.request.AuthenticationRequest;
+import it.syncroweb.logintest.dto.response.AuthenticationResponse;
+import it.syncroweb.logintest.dto.request.RegisterRequest;
 import it.syncroweb.logintest.model.Token;
 import it.syncroweb.logintest.model.UserEntity;
 import it.syncroweb.logintest.repository.RoleRepository;
@@ -50,14 +50,24 @@ public class AuthenticationService {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    public AuthenticationResponse register(RegisterRequest registerRequest, HttpServletRequest request) {
-        UserEntity user = UserEntity.builder()
+    public AuthenticationResponse register(RegisterRequest registerRequest) {
+        /*UserEntity user = UserEntity.builder()
                 .firstname(registerRequest.getFirstname())
                 .lastname(registerRequest.getLastname())
+                .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(Collections.singletonList(roleRepository.findByName(registerRequest.getRole()).get()))
-                .build();
+                .build();*/
+
+        UserEntity user = new UserEntity();
+        user.setFirstname(registerRequest.getFirstname());
+        user.setLastname(registerRequest.getLastname());
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRoles(Collections.singletonList(roleRepository.findByName(registerRequest.getRole()).get()));
+
 
         UserEntity savedUser = userRepository.save(user);
 
@@ -68,8 +78,8 @@ public class AuthenticationService {
         savedUser.setTokens(tokens);
 
         // mi serve per mandare una mail di conferma
-        String appUrl = request.getContextPath();
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl, request.getLocale(),savedUser));
+        //String appUrl = request.getContextPath();
+        //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(savedUser, request.getLocale(),appUrl));
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -79,8 +89,8 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        UserEntity user = userRepository.findByEmail(request.getEmail())
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword()));
+        UserEntity user = userRepository.findByUsernameOrEmail(request.getUsernameOrEmail(),request.getUsernameOrEmail())
                 .orElseThrow();
 
         String jwtToken = jwtService.generateToken(user);
@@ -122,20 +132,18 @@ public class AuthenticationService {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String userEmail;
+        final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            UserEntity userEntity = this.userRepository.findByEmail(userEmail)
+        username = jwtService.extractUsername(refreshToken);
+        if (username != null) {
+            UserEntity userEntity = this.userRepository.findByUsername(username)
                     .orElseThrow();
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             if (jwtService.isTokenValid(refreshToken, userDetails)) {
                 String accessToken = jwtService.generateToken(userEntity);
-                revokeAllUserTokens(userEntity);
-                saveUserToken(userEntity, accessToken);
                 AuthenticationResponse authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)

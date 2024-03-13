@@ -13,7 +13,7 @@ public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private final Locale locale;
     private final UserEntity user;
 
-    public OnRegistrationCompleteEvent(final String appUrl,final Locale locale,final UserEntity user) {
+    public OnRegistrationCompleteEvent(final UserEntity user, final Locale locale, final String appUrl) {
         super(user);
 
         this.appUrl = appUrl;

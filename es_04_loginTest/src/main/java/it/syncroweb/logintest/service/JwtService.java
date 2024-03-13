@@ -59,7 +59,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setHeaderParam("typ","jwt")
                 .setId(String.valueOf(userEntity.getId()))
-                .setSubject(userEntity.getEmail())
+                .setSubject(userEntity.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

@@ -1,4 +1,4 @@
-package it.syncroweb.logintest.dto;
+package it.syncroweb.logintest.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

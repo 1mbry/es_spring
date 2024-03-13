@@ -2,6 +2,8 @@ package it.syncroweb.logintest.dto;
 
 import it.syncroweb.logintest.utils.validation.PasswordMatches;
 import it.syncroweb.logintest.utils.validation.ValidEmail;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ public class UserDto {
 
     @NotNull
     @NotEmpty
+    @NotBlank
     private String firstName;
 
     @NotNull
@@ -32,6 +35,7 @@ public class UserDto {
     @ValidEmail
     @NotNull
     @NotEmpty
+    @Email(regexp = "[]", message = "")
     private String email;
 
 
