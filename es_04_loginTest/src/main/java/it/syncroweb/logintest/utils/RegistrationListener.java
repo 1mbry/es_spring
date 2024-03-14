@@ -16,30 +16,35 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     @Autowired
     private JwtService jwtService;
-
     @Autowired
     private MessageSource messages;
-
     @Autowired
     private JavaMailSender mailSender;
 
     @Override
     public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+        this.confirmRegistration(event);
+    }
 
+    private void confirmRegistration(OnRegistrationCompleteEvent event){
         UserEntity user = event.getUser();
         String token = UUID.randomUUID().toString();
         jwtService.createEmailToken(user,token);
 
+        SimpleMailMessage email = construtcEmailMessage(event,user,token);
+        mailSender.send(email);
+    }
+
+    private SimpleMailMessage construtcEmailMessage(OnRegistrationCompleteEvent event, UserEntity user, String token){
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
-        String confirmationUrl
-                = event.getAppUrl() + "/api/v1/auth/registrationConfirm?token=" + token;
-        String message = messages.getMessage("test", null, event.getLocale());
-
+        String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
+        String message = messages.getMessage("message.regSuccLink", null, event.getLocale());
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "\r\n" + "http://localhost:8081" + confirmationUrl);
+        email.setText(message + " \r\n" + "http://localhost:8081" + confirmationUrl);
         mailSender.send(email);
+        return email;
     }
 }

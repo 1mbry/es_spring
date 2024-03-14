@@ -51,28 +51,20 @@ public class AuthenticationService {
     private ApplicationEventPublisher eventPublisher;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        /*UserEntity user = UserEntity.builder()
+        UserEntity user = UserEntity.builder()
                 .firstname(registerRequest.getFirstname())
                 .lastname(registerRequest.getLastname())
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(Collections.singletonList(roleRepository.findByName(registerRequest.getRole()).get()))
-                .build();*/
-
-        UserEntity user = new UserEntity();
-        user.setFirstname(registerRequest.getFirstname());
-        user.setLastname(registerRequest.getLastname());
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setRoles(Collections.singletonList(roleRepository.findByName(registerRequest.getRole()).get()));
+                .build();
 
 
         UserEntity savedUser = userRepository.save(user);
 
         String jwtToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        String refreshToken = jwtService.generateRefreshToken(user);
 
         List<Token> tokens = saveUserToken(savedUser, jwtToken);
         savedUser.setTokens(tokens);

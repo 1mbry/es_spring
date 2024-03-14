@@ -36,12 +36,12 @@ public class AuthenticationController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/register")
+    @PostMapping("/register2")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest){
         return new ResponseEntity<>(service.register(registerRequest), HttpStatus.OK);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/authenticate2")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return new ResponseEntity<>(service.authenticate(request), HttpStatus.OK);
     }
@@ -56,8 +56,8 @@ public class AuthenticationController {
         List<UserEntity> userEntity = userRepository.findAll();
         return new ResponseEntity<>(userEntity, HttpStatus.OK);
     }
-    @GetMapping("/registrationConfirm")
-    public String confirmRegistration(WebRequest request, Model model, @RequestParam(name = "token") String token){
+    @GetMapping("/registrationConfirm2")
+    public String confirmRegistration2(WebRequest request, Model model, @RequestParam(name = "token") String token){
 
         Locale locale = request.getLocale();
 

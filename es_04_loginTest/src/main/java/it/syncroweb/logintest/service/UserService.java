@@ -7,15 +7,21 @@ import it.syncroweb.logintest.model.UserEntity;
 import it.syncroweb.logintest.repository.EmailTokenRepository;
 import it.syncroweb.logintest.repository.RoleRepository;
 import it.syncroweb.logintest.repository.UserRepository;
+import it.syncroweb.logintest.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class UserService {
+
+    public static final String TOKEN_INVALID = "invalidToken";
+    public static final String TOKEN_EXPIRED = "expired";
+    public static final String TOKEN_VALID = "valid";
 
     @Autowired
     private UserRepository userRepository;
@@ -50,7 +56,7 @@ public class UserService {
     public String validateEmailToken(String token){
         EmailToken emailToken = emailTokenRepository.findByToken(token);
         if(emailToken == null){
-            return "invalid token";
+            return TOKEN_INVALID;
         }
 
         UserEntity userEntity = emailToken.getUser();
@@ -59,11 +65,11 @@ public class UserService {
                 .getTime() - calendar.getTime()
                 .getTime()) <= 0){
             emailTokenRepository.delete(emailToken);
-            return "token expired";
+            return TOKEN_EXPIRED;
         }
 
         //userEntity.setEnable(true);
-        return "token valido";
+        return TOKEN_VALID;
     }
 
     /*
@@ -83,4 +89,28 @@ public class UserService {
     private boolean emailExists(String email){
         return userRepository.findByEmail(email) != null;
     }
+
+    /*
+     *
+     */
+    public void saveRegisteredUser(UserEntity user){
+        userRepository.save(user);
+    }
+
+    /*
+     *
+     */
+    public EmailToken generateNewEmailToken(String existingEmailToken){
+        EmailToken emailToken = emailTokenRepository.findByToken(existingEmailToken);
+        Utils.updateEmailToken(emailToken, UUID.randomUUID().toString());
+        emailToken = emailTokenRepository.save(emailToken);
+        return emailToken;
+    }
+
+
+
+
+    /*
+     *
+     */
 }

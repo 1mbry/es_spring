@@ -21,8 +21,8 @@ logging:
   file:
     name: es_03_spring_swagger_database/logs/cocktail_dev.log
   pattern:
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%-5level] %logger{36} - %msg%n"
-    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){green} %clr([${PID:- }]){magenta} %clr([%-5level]){yellow} %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%mdc] [%-5level] %logger{36} - %msg%n"
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss}){green} %clr([%mdc]){cyan} %clr([${PID:- }]){magenta} %clr([%-5level]){yellow} %logger{36} - %msg%n"
   level:
     root: info
     org:
